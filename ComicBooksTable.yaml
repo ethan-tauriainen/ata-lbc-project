@@ -1,0 +1,18 @@
+Resources:
+  ComicBooksTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      "AttributeDefinitions":
+        - "AttributeName": "ASIN"
+          "AttributeType": "S"
+        - "AttributeName": "RELEASE_YEAR"
+          "AttributeType": "S"
+      "KeySchema":
+        - "AttributeName": "ASIN"
+          "KeyType": "HASH"
+        - "AttributeName": "RELEASE_YEAR"
+          "KeyType": "RANGE"
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: false
+      BillingMode: PAY_PER_REQUEST
+      TableName: "TB_COMIC_BOOKS"
