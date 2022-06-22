@@ -87,3 +87,19 @@
 .state.active {
     display: block;
 }
+
+/* Styles for home.html */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box {
+    width: 500px;
+    margin: 10px;
+    outline: dashed 2px black;
+    display: flex;
+    justify-content: center;
+}
