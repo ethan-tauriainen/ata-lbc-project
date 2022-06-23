@@ -1,6 +1,7 @@
 package com.kenzie.appserver.controller;
 
 import com.kenzie.appserver.controller.model.ComicBookResponse;
+import com.kenzie.appserver.service.ComicBookService;
 import com.kenzie.appserver.service.model.ComicBook;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.kenzie.appserver.service.model.Review;
 
 import java.time.Instant;
 import java.util.List;
@@ -21,7 +22,7 @@ public class ComicBookRecord {
     private String writer;
     private String illustrator;
     private String description;
-    private List<ReviewRecord> reviews;
+    private List<Review> reviews;
 
     public ComicBookRecord() {
         this.createdAt = Instant.now();
@@ -109,11 +110,11 @@ public class ComicBookRecord {
     }
 
     @DynamoDBAttribute(attributeName = "REVIEWS")
-    public List<ReviewRecord> getReviews() {
+    public List<Review> getReviews() {
         return reviews;
     }
 
-    public void setReviews(List<ReviewRecord> reviews) {
+    public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
 
