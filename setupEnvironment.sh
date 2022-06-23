@@ -10,12 +10,12 @@
 
 # Fill out the following values
 # The path of your repo on github.  Don't but the whole URL, just the part after github.com/
-export LBC_REPO_NAME=ata-lbc-project-ijsalman
+export LBC_REPO_NAME=ata-lbc-project-team-four
 
 # Do not modify the rest of these unless you have been instructed to do so.
-export LBC_PROJECT_NAME=unitproject4
-export LBC_PIPELINE_STACK=$LBC_PROJECT_NAME-$GITHUB_USERNAME
-export LBC_ARTIFACT_BUCKET=$LBC_PROJECT_NAME-$GITHUB_USERNAME-artifacts
-export LBC_DEPLOY_STACK=$LBC_PROJECT_NAME-$GITHUB_USERNAME-application
-export LBC_APPLICATION_NAME=$LBC_PROJECT_NAME-$GITHUB_USERNAME-application
-export LBC_ENVIRONMENT_NAME=$LBC_PROJECT_NAME-$GITHUB_USERNAME-environment-dev
+export LBC_PROJECT_NAME=lbcproject
+export LBC_PIPELINE_STACK=$LBC_PROJECT_NAME-ethan-tauriainen
+export LBC_ARTIFACT_BUCKET=$LBC_PROJECT_NAME-ethan-tauriainen-artifacts
+export LBC_DEPLOY_STACK=$LBC_PROJECT_NAME-ethan-tauriainen-application
+export LBC_APPLICATION_NAME=$LBC_PROJECT_NAME-ethan-tauriainen-application
+export LBC_ENVIRONMENT_NAME=$LBC_PROJECT_NAME-ethan-tauriainen-environment-dev
