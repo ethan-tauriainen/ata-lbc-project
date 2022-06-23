@@ -2,7 +2,7 @@ package com.kenzie.appserver.controller;
 
 import com.kenzie.appserver.IntegrationTest;
 import com.kenzie.appserver.controller.model.ExampleCreateRequest;
-import com.kenzie.appserver.service.ExampleService;
+import com.kenzie.appserver.service.ComicBookService;
 import com.kenzie.appserver.service.model.Example;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +28,7 @@ class ExampleControllerTest {
     private MockMvc mvc;
 
     @Autowired
-    ExampleService exampleService;
+    ComicBookService comicBookService;
 
     private final MockNeat mockNeat = MockNeat.threadLocal();
 
@@ -40,7 +40,7 @@ class ExampleControllerTest {
         String name = mockNeat.strings().valStr();
 
         Example example = new Example(id, name);
-        Example persistedExample = exampleService.addNewExample(example);
+        Example persistedExample = comicBookService.addNewExample(example);
         mvc.perform(get("/example/{id}", persistedExample.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("id")
