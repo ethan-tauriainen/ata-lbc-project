@@ -2,12 +2,9 @@ package com.kenzie.appserver.repositories.model;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import com.kenzie.appserver.service.model.Review;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Objects;
 
 @DynamoDBTable(tableName = "TB_COMIC_BOOKS")
@@ -22,7 +19,6 @@ public class ComicBookRecord {
     private String writer;
     private String illustrator;
     private String description;
-    private List<Review> reviews;
 
     public ComicBookRecord() {
         this.createdAt = Instant.now();
@@ -64,7 +60,7 @@ public class ComicBookRecord {
         this.asin = asin;
     }
 
-    @DynamoDBRangeKey(attributeName = "RELEASE_YEAR")
+    @DynamoDBAttribute(attributeName = "RELEASE_YEAR")
     public String getReleaseYear() {
         return releaseYear;
     }
@@ -107,15 +103,6 @@ public class ComicBookRecord {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @DynamoDBAttribute(attributeName = "REVIEWS")
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
     }
 
     @Override
