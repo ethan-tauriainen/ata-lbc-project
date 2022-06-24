@@ -1,10 +1,8 @@
 package com.kenzie.appserver.controller.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kenzie.appserver.service.model.Review;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
 public class ComicBookCreateRequest {
     @NotEmpty
@@ -27,9 +25,6 @@ public class ComicBookCreateRequest {
     @JsonProperty("description")
     private String description;
 
-    @JsonProperty("reviews")
-    private List<Review> reviews;
-
     public String getReleaseYear() {
         return releaseYear;
     }
@@ -48,9 +43,5 @@ public class ComicBookCreateRequest {
 
     public String getDescription() {
         return description;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
     }
 }

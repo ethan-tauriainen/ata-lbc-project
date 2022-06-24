@@ -3,14 +3,12 @@ package com.kenzie.appserver.service;
 import com.kenzie.appserver.repositories.ComicBookRepository;
 import com.kenzie.appserver.repositories.model.ComicBookRecord;
 import com.kenzie.appserver.service.model.ComicBook;
-import com.kenzie.appserver.service.model.Review;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,19 +31,6 @@ public class ComicBookServiceTest {
     @Test
     void findAll() {
         String asin = UUID.randomUUID().toString();
-        String reviewer = "Bob";
-        Double score = 4.5D;
-        String reviewDescription = "Excellent comic from start to finish!";
-
-        Review review = new Review(
-                reviewer,
-                score,
-                reviewDescription
-        );
-
-        List<Review> reviews = new ArrayList<>(
-                Collections.singleton(review)
-        );
 
         String releaseYear = "1972";
         String title = "Werewolf by Night";
@@ -59,24 +44,10 @@ public class ComicBookServiceTest {
                 title,
                 writer,
                 illustrator,
-                comicDescription,
-                reviews
+                comicDescription
         );
 
         String asin2 = UUID.randomUUID().toString();
-        String reviewer2 = "John";
-        Double score2 = 4.3D;
-        String reviewDescription2 = "Excellent comic from start to finish! Love it.";
-
-        Review review2 = new Review(
-                reviewer2,
-                score2,
-                reviewDescription2
-        );
-
-        List<Review> reviews2 = new ArrayList<>(
-                Collections.singleton(review2)
-        );
 
         String releaseYear2 = "2022";
         String title2 = "Gang of Three";
@@ -90,8 +61,7 @@ public class ComicBookServiceTest {
                 title2,
                 writer2,
                 illustrator2,
-                comicDescription2,
-                reviews2
+                comicDescription2
         );
 
         ComicBookRecord bookRecord1 = new ComicBookRecord();
@@ -102,7 +72,6 @@ public class ComicBookServiceTest {
         bookRecord1.setWriter(book1.getWriter());
         bookRecord1.setIllustrator(book1.getIllustrator());
         bookRecord1.setDescription(book1.getDescription());
-        bookRecord1.setReviews(book1.getReviews());
 
         ComicBookRecord bookRecord2 = new ComicBookRecord();
 
@@ -112,7 +81,6 @@ public class ComicBookServiceTest {
         bookRecord2.setWriter(book2.getWriter());
         bookRecord2.setIllustrator(book2.getIllustrator());
         bookRecord2.setDescription(book2.getDescription());
-        bookRecord2.setReviews(book2.getReviews());
 
         List<ComicBookRecord> comicBookList = new ArrayList<>();
 
@@ -131,20 +99,20 @@ public class ComicBookServiceTest {
                 "The titles match.");
 
         for (ComicBook book : comicBooks) {
-            if (book.getAsin() == bookRecord1.getAsin()) {
+            if (book.getAsin().equals(bookRecord1.getAsin())) {
                 Assertions.assertEquals(book.getTitle(), bookRecord1.getTitle(), "The book title matches");
                 Assertions.assertEquals(book.getIllustrator(), bookRecord1.getIllustrator(), "The book illustrator matches");
                 Assertions.assertEquals(book.getDescription(), bookRecord1.getDescription(), "The book description matches");
                 Assertions.assertEquals(book.getWriter(), bookRecord1.getWriter(), "The book writer matches");
                 Assertions.assertEquals(book.getReleaseYear(), bookRecord1.getReleaseYear(), "The book release year matches");
-            } else if (book.getAsin() == bookRecord2.getAsin()) {
+            } else if (book.getAsin().equals(bookRecord2.getAsin())) {
                 Assertions.assertEquals(book.getTitle(), bookRecord2.getTitle(), "The book title matches");
                 Assertions.assertEquals(book.getIllustrator(), bookRecord2.getIllustrator(), "The book illustrator matches");
                 Assertions.assertEquals(book.getDescription(), bookRecord2.getDescription(), "The book description matches");
                 Assertions.assertEquals(book.getWriter(), bookRecord2.getWriter(), "The book writer matches");
                 Assertions.assertEquals(book.getReleaseYear(), bookRecord2.getReleaseYear(), "The book release year matches");
             } else {
-                Assertions.assertTrue(false, "The returned book is not in the records!");
+                Assertions.fail("The returned book is not in the records!");
             }
         }
     }

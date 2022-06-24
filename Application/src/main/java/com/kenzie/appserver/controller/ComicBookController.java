@@ -37,7 +37,6 @@ public class ComicBookController {
         comicBookResponse.setWriter(comicBook.getWriter());
         comicBookResponse.setDescription(comicBook.getDescription());
         comicBookResponse.setIllustrator(comicBook.getIllustrator());
-        comicBookResponse.setReviews(comicBook.getReviews());
         return comicBookResponse;
     }
 }

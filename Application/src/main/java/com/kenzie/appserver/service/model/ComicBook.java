@@ -10,16 +10,14 @@ public class ComicBook {
     private final String writer;
     private final String illustrator;
     private final String description;
-    private final List<Review> reviews;
 
-    public ComicBook(String asin, String releaseYear, String title, String writer, String illustrator, String description, List<Review> reviews) {
+    public ComicBook(String asin, String releaseYear, String title, String writer, String illustrator, String description) {
         this.asin = asin;
         this.releaseYear = releaseYear;
         this.title = title;
         this.writer = writer;
         this.illustrator = illustrator;
         this.description = description;
-        this.reviews = reviews;
     }
 
     public String getAsin() {
@@ -46,7 +44,4 @@ public class ComicBook {
         return this.description;
     }
 
-    public List<Review> getReviews() {
-        return this.reviews;
-    }
 }

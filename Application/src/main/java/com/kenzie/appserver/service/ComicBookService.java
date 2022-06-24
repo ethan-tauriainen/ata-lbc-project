@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class ComicBookService {
-    private ComicBookRepository comicBookRepository;
+    private final ComicBookRepository comicBookRepository;
 
     public ComicBookService(ComicBookRepository comicBookRepository) {
         this.comicBookRepository = comicBookRepository;
@@ -28,8 +28,8 @@ public class ComicBookService {
                     record.getTitle(),
                     record.getWriter(),
                     record.getIllustrator(),
-                    record.getDescription(),
-                    record.getReviews()));
+                    record.getDescription())
+            );
         }
         return comicBooks;
     }
