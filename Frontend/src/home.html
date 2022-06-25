@@ -1,13 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
+    <script type="text/javascript" src="home.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <meta charset="UTF-8">
-    <title>Comic Bookworms Club</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
-<body class="container">
-    <div class="box">
-        <h3>Comic Book List</h3>
+<body class="background">
+<header class="header" id="header">
+    <div class="site-title">
+        <a class="header_home" href="index.html">Comic Bookworms Club</a>
     </div>
+</header>
+<div class="card">
+    <h2>Get Comic Books</h2>
+    <form class="card-content" id="get-comic-books-form">
+        <button type="submit">Get</button>
+    </form>
+</div>
+<div class="card" id="result">
+    <h2>Result:</h2>
+    <p id="result-info"></p>
+</div>
+
 </body>
 </html>

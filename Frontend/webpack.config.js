@@ -9,7 +9,7 @@ module.exports = {
     usedExports: true
   },
   entry: {
-    examplePage: path.resolve(__dirname, 'src', 'pages', 'examplePage.js'),
+    examplePage: path.resolve(__dirname, 'src', 'pages', 'home.js'),
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -17,14 +17,22 @@ module.exports = {
   },
   devServer: {
     https: true,
-    port: 8000,
+    port: 8080,
     open: true,
-    openPage: 'https://localhost:8000',
+    openPage: 'https://localhost:8080',
     // diableHostChecks, otherwise we get an error about headers and the page won't render
     disableHostCheck: true,
     contentBase: 'packaging_additional_published_artifacts',
     // overlay shows a full-screen overlay in the browser when there are compiler errors or warnings
-    overlay: true
+    overlay: true,
+    proxy: [
+      {
+        context: [
+          '/books'
+        ],
+        target: 'http://localhost:5001'
+      }
+    ]
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -32,6 +40,11 @@ module.exports = {
       filename: 'index.html',
       inject: false
     }),
+//    new HtmlWebpackPlugin({
+//          template: './src/home.html',
+//          filename: 'home.html',
+//          inject: false
+//        }),
     new CopyPlugin({
       patterns: [
         {

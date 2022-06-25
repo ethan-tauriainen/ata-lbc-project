@@ -36,12 +36,12 @@ export default class ExampleClient extends BaseClass {
      * @param errorCallback (Optional) A function to execute if the call fails.
      * @returns The concert
      */
-    async getExample(id, errorCallback) {
+    async getComicBooks(errorCallback) {
         try {
-            const response = await this.client.get(`/example/${id}`);
+            const response = await this.client.get(`/all`);
             return response.data;
         } catch (error) {
-            this.handleError("getConcert", error, errorCallback)
+            this.handleError("getComicBooks", error, errorCallback)
         }
     }
 

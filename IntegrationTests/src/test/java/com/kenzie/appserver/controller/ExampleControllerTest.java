@@ -23,7 +23,8 @@
 //
 //
 //@IntegrationTest
-//class ExampleControllerTest {
+//clas
+// s ExampleControllerTest {
 //    @Autowired
 //    private MockMvc mvc;
 //
