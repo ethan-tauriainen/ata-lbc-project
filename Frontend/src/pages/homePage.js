@@ -1,11 +1,11 @@
  import BaseClass from "../util/baseClass";
  import DataStore from "../util/DataStore";
- import ExampleClient from "../api/homeClient";
+ import HomeClient from "../api/homeClient";
 
  /**
   * Logic needed for the view playlist page of the website.
   */
- class Home extends BaseClass {
+ class HomePage extends BaseClass {
 
      constructor() {
          super();
@@ -18,7 +18,7 @@
       */
      async mount() {
 //         document.getElementById('get-comic-books-form').addEventListener('submit', this.onGet);
-//         document.getElementById('create-form').addEventListener('submit', this.onCreate);
+         document.getElementById('get-comic-books-form').addEventListener('submit', this.onCreate);
          this.client = new HomeClient();
          await this.onGetComicBooks();
 
@@ -35,20 +35,21 @@
          let html = ""
          html += "<ul>"
 
-         for(comicBook of comicBooks) {
-            html += `<li>
-                        <h3>${comicBook.title}</h3>
-                     </li>`
+         for(let comicBook of comicBooks) {
+            html += `
+                <li>
+                    <h3>${comicBook.title}</h3>
+                 </li>
+            `
          }
 
          html += "</ul>"
 
-//         if(comicBooks) {
-//            resultArea.innerHTML = html;
-//         } else {
-//            resultArea.innerHTML = "No ComicBooks";
-//         }
-        resultArea.innerHTML = "sldfkgh";
+        if(comicBooks) {
+           resultArea.innerHTML = html;
+        } else {
+           resultArea.innerHTML = "No ComicBooks";
+        }
      }
 
      // Event Handlers --------------------------------------------------------------------------------------------------
@@ -71,7 +72,7 @@
   */
  const main = async () => {
      const homePage = new HomePage();
-     homePage.mount();
+     await homePage.mount();
  };
 
  window.addEventListener('DOMContentLoaded', main);
