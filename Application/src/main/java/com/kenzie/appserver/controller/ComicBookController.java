@@ -1,15 +1,17 @@
 package com.kenzie.appserver.controller;
 
+import com.kenzie.appserver.controller.model.ComicBookCreateRequest;
 import com.kenzie.appserver.controller.model.ComicBookResponse;
 import com.kenzie.appserver.service.ComicBookService;
 import com.kenzie.appserver.service.model.ComicBook;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.UUID.randomUUID;
 
 @RestController
 @RequestMapping("/books")
@@ -27,6 +29,21 @@ public class ComicBookController {
         List<ComicBookResponse> responses = comicBookList.stream().map(comicBook -> comicBookToResponse(comicBook)).collect(Collectors.toList());
 
         return ResponseEntity.ok(responses);
+    }
+
+    @PostMapping
+    public ResponseEntity<ComicBookResponse> addNewBook(@RequestBody ComicBookCreateRequest bookCreateRequest) {
+        ComicBook book = new ComicBook(randomUUID().toString(),
+                bookCreateRequest.getReleaseYear(),
+                bookCreateRequest.getTitle(),
+                bookCreateRequest.getWriter(),
+                bookCreateRequest.getIllustrator(),
+                bookCreateRequest.getDescription());
+        comicBookService.addNewBook(book);
+
+        ComicBookResponse bookResponse = comicBookToResponse(book);
+
+        return ResponseEntity.created(URI.create("/books/" + bookResponse.getAsin())).body(bookResponse);
     }
 
     private ComicBookResponse comicBookToResponse(ComicBook comicBook) {
