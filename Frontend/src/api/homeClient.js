@@ -4,16 +4,16 @@ import axios from 'axios'
 /**
  * Client to call the MusicPlaylistService.
  *
- * This could be a great place to explore Mixins. Currently the client is being loaded multiple times on each page,
+ * This could be a great place to explore Mixins. Currently, the client is being loaded multiple times on each page,
  * which we could avoid using inheritance or Mixins.
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Mix-ins
  * https://javascript.info/mixins
  */
-export default class ExampleClient extends BaseClass {
+export default class HomeClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['clientLoaded', 'getExample', 'createExample'];
+        const methodsToBind = ['clientLoaded', 'getComicBooks', 'createExample'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -31,17 +31,16 @@ export default class ExampleClient extends BaseClass {
     }
 
     /**
-     * Gets the concert for the given ID.
-     * @param id Unique identifier for a concert
+     * Gets all Comic Books.
      * @param errorCallback (Optional) A function to execute if the call fails.
-     * @returns The concert
+     * @returns List of comic books.
      */
-    async getExample(id, errorCallback) {
+    async getComicBooks(errorCallback) {
         try {
-            const response = await this.client.get(`/example/${id}`);
+            const response = await this.client.get(`/books/all`);
             return response.data;
         } catch (error) {
-            this.handleError("getConcert", error, errorCallback)
+            this.handleError("getComicBooks", error, errorCallback)
         }
     }
 
@@ -58,6 +57,7 @@ export default class ExampleClient extends BaseClass {
 
     /**
      * Helper method to log the error and run any error functions.
+     * @param method The method being called.
      * @param error The error received from the server.
      * @param errorCallback (Optional) A function to execute if the call fails.
      */
