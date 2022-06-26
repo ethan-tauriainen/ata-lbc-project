@@ -29,19 +29,39 @@ public class ComicBookCreateRequest {
         return releaseYear;
     }
 
+    public void setReleaseYear(String releaseYear) {
+        this.releaseYear = releaseYear;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getWriter() {
         return writer;
     }
 
+    public void setWriter(String writer) {
+        this.writer = writer;
+    }
+
     public String getIllustrator() {
         return illustrator;
     }
 
+    public void setIllustrator(String illustrator) {
+        this.illustrator = illustrator;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
