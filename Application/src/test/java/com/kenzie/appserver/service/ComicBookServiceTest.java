@@ -7,12 +7,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 public class ComicBookServiceTest {
     private ComicBookRepository comicBookRepository;
@@ -115,5 +118,51 @@ public class ComicBookServiceTest {
                 Assertions.fail("The returned book is not in the records!");
             }
         }
+    }
+
+    /** ------------------------------------------------------------------------
+     *  comicBookService.addNewBook
+     *  ------------------------------------------------------------------------ **/
+
+    @Test
+    void addNewBook() {
+        String asin = UUID.randomUUID().toString();
+
+        String releaseYear = "1999";
+        String title = "Owl by Night";
+        String writer = "Jack Dorsey";
+        String illustrator = "Unknown Man";
+        String comicDescription = "It was about a man who turns owl at night.";
+
+        ComicBook book = new ComicBook(
+                asin,
+                releaseYear,
+                title,
+                writer,
+                illustrator,
+                comicDescription
+        );
+
+        ComicBookRecord bookRecord = new ComicBookRecord();
+
+        bookRecord.setAsin(book.getAsin());
+        bookRecord.setReleaseYear(book.getReleaseYear());
+        bookRecord.setTitle(book.getTitle());
+        bookRecord.setWriter(book.getWriter());
+        bookRecord.setIllustrator(book.getIllustrator());
+        bookRecord.setDescription(book.getDescription());
+
+        Mockito.when(comicBookService.addNewBook(book)).thenReturn(book);
+        ComicBook addedBook = comicBookService.addNewBook(book);
+
+        verify(comicBookRepository).save(bookRecord);
+
+        Assertions.assertNotNull(addedBook, "The book is added.");
+        Assertions.assertEquals(addedBook.getAsin(), book.getAsin(),
+                "The asin matches");
+        Assertions.assertEquals(addedBook.getReleaseYear(), book.getReleaseYear(),
+                "The release year matches");
+        Assertions.assertEquals(addedBook.getWriter(), book.getWriter(),
+                "The writer matches.");
     }
 }

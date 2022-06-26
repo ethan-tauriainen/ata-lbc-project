@@ -34,4 +34,17 @@ public class ComicBookService {
         return comicBooks;
     }
 
+    public ComicBook addNewBook(ComicBook book) {
+        ComicBookRecord bookRecord = new ComicBookRecord();
+        bookRecord.setAsin(book.getAsin());
+        bookRecord.setReleaseYear(book.getReleaseYear());
+        bookRecord.setTitle(book.getTitle());
+        bookRecord.setWriter(book.getWriter());
+        bookRecord.setIllustrator(book.getIllustrator());
+        bookRecord.setDescription(book.getDescription());
+        comicBookRepository.save(bookRecord);
+
+        return book;
+    }
+
 }
