@@ -3,13 +3,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-
 module.exports = {
   optimization: {
     usedExports: true
   },
   entry: {
-    examplePage: path.resolve(__dirname, 'src', 'pages', 'examplePage.js'),
+    homePage: path.resolve(__dirname, 'src', 'pages', 'homePage.js'),
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -17,14 +16,22 @@ module.exports = {
   },
   devServer: {
     https: true,
-    port: 8000,
+    port: 8080,
     open: true,
-    openPage: 'https://localhost:8000',
-    // diableHostChecks, otherwise we get an error about headers and the page won't render
+    openPage: 'https://localhost:8080',
+    // disableHostChecks, otherwise we get an error about headers and the page won't render
     disableHostCheck: true,
     contentBase: 'packaging_additional_published_artifacts',
     // overlay shows a full-screen overlay in the browser when there are compiler errors or warnings
-    overlay: true
+    overlay: true,
+    proxy: [
+      {
+        context: [
+          '/books'
+        ],
+        target: 'http://localhost:5001'
+      }
+    ]
   },
   plugins: [
     new HtmlWebpackPlugin({
