@@ -7,8 +7,8 @@ import java.util.Objects;
 
 @DynamoDBTable(tableName = "TB_COMIC_BOOKS")
 public class ComicBookRecord {
-    private Instant createdAt;
-    private Instant modifiedAt;
+    private Instant createdAt;  // Time object was created.
+    private Instant modifiedAt; // Time object was updated.
     private String createdBy;
     private String modifiedBy;
     private String asin;
