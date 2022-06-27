@@ -1,18 +1,16 @@
 package com.kenzie.appserver.repositories.model;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
 
 import java.time.Instant;
 import java.util.Objects;
 
 @DynamoDBTable(tableName = "TB_COMIC_BOOKS")
 public class ComicBookRecord {
-    protected Instant createdAt;
-    protected Instant modifiedAt;
-    protected String createdBy;
-    protected String modifiedBy;
+    private Instant createdAt;
+    private Instant modifiedAt;
+    private String createdBy;
+    private String modifiedBy;
     private String asin;
     private String releaseYear;
     private String title;
@@ -25,8 +23,15 @@ public class ComicBookRecord {
     }
 
     @DynamoDBAttribute(attributeName = "MODIFIED")
+    @DynamoDBTypeConverted( converter = InstantConverter.class )
     public Instant getModifiedAt() {
         return modifiedAt;
+    }
+
+    @DynamoDBAttribute(attributeName = "CREATED")
+    @DynamoDBTypeConverted( converter = InstantConverter.class )
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
     public void setModifiedAt(Instant modifiedAt) {
@@ -116,5 +121,20 @@ public class ComicBookRecord {
     @Override
     public int hashCode() {
         return Objects.hash(asin);
+    }
+
+    static public class InstantConverter implements DynamoDBTypeConverter<String, Instant> {
+
+        @Override
+        public String convert( final Instant time ) {
+
+            return time.toString();
+        }
+
+        @Override
+        public Instant unconvert( final String stringValue ) {
+
+            return Instant.parse(stringValue);
+        }
     }
 }
