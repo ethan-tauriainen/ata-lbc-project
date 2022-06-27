@@ -52,9 +52,9 @@ class ComicBookControllerTest {
         bookCreateRequest.setIllustrator(illustrator);
         bookCreateRequest.setDescription(description);
 
-        mapper.registerModule(new JavaTimeModule());
+//        mapper.registerModule(new JavaTimeModule());
 
-        ComicBook book = comicBookService.addNewBook()
+//        ComicBook book = comicBookService.addNewBook()
 
         // WHEN
         mvc.perform(post("/books")
@@ -62,17 +62,16 @@ class ComicBookControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(bookCreateRequest)))
                 // THEN
-                .andExpect(jsonPath("RELEASE_YEAR")
+                .andExpect(jsonPath("releaseYear")
                         .value(is(releaseYear)))
-                .andExpect(jsonPath("TITLE")
+                .andExpect(jsonPath("title")
                         .value(is(title)))
-                .andExpect(jsonPath("WRITER")
+                .andExpect(jsonPath("writer")
                         .value(is(writer)))
-                .andExpect(jsonPath("ILLUSTRATOR")
+                .andExpect(jsonPath("illustrator")
                         .value(is(illustrator)))
-                .andExpect(jsonPath("DESCRIPTION")
-                        .value(is(description)))
-                .andExpect(status().isOk());
+                .andExpect(jsonPath("description")
+                        .value(is(description)));
     }
 
 
