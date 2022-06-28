@@ -51,4 +51,18 @@ public class ComicBookService {
         comicBookRepository.deleteByAsin(asin);
     }
 
+    public ComicBook findBookByAsin(String asin) {
+        ComicBook comicBook = comicBookRepository
+                .findById(asin)
+                .map(book -> new ComicBook (book.getAsin(),
+                        book.getReleaseYear(),
+                        book.getTitle(),
+                        book.getWriter(),
+                        book.getIllustrator(),
+                        book.getDescription()))
+                .orElse(null);
+
+        return comicBook;
+    }
+
 }

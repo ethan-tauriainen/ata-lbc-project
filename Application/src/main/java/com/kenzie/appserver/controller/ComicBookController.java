@@ -52,6 +52,16 @@ public class ComicBookController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{asin}")
+    public ResponseEntity<ComicBookResponse> findBookByAsin(@PathVariable("asin") String asin) {
+        ComicBook book = comicBookService.findBookByAsin(asin);
+        if (book == null) {
+            return ResponseEntity.notFound().build();
+        }
+        ComicBookResponse bookResponse = comicBookToResponse(book);
+        return ResponseEntity.ok(bookResponse);
+    }
+
     private ComicBookResponse comicBookToResponse(ComicBook comicBook) {
         ComicBookResponse comicBookResponse = new ComicBookResponse();
         comicBookResponse.setAsin(comicBook.getAsin());
