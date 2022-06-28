@@ -46,6 +46,12 @@ public class ComicBookController {
         return ResponseEntity.created(URI.create("/books/" + bookResponse.getAsin())).body(bookResponse);
     }
 
+    @DeleteMapping("/delete/{asin}")
+    public ResponseEntity<Void> deleteComicBook(@PathVariable("asin") String asin) {
+        comicBookService.deleteComicBook(asin);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{asin}")
     public ResponseEntity<ComicBookResponse> findBookByAsin(@PathVariable("asin") String asin) {
         ComicBook book = comicBookService.findBookByAsin(asin);
@@ -55,7 +61,6 @@ public class ComicBookController {
         ComicBookResponse bookResponse = comicBookToResponse(book);
         return ResponseEntity.ok(bookResponse);
     }
-
 
     private ComicBookResponse comicBookToResponse(ComicBook comicBook) {
         ComicBookResponse comicBookResponse = new ComicBookResponse();

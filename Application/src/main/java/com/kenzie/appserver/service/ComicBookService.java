@@ -47,6 +47,10 @@ public class ComicBookService {
         return book;
     }
 
+    public void deleteComicBook(String asin) {
+        comicBookRepository.deleteByAsin(asin);
+    }
+
     public ComicBook findBookByAsin(String asin) {
         ComicBook comicBook = comicBookRepository
                 .findById(asin)
