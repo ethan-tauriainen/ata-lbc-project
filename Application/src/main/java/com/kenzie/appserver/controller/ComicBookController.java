@@ -6,6 +6,7 @@ import com.kenzie.appserver.service.ComicBookService;
 import com.kenzie.appserver.service.model.ComicBook;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.util.List;
@@ -34,6 +35,7 @@ public class ComicBookController {
     @PostMapping
     public ResponseEntity<ComicBookResponse> addNewBook(@RequestBody ComicBookCreateRequest bookCreateRequest) {
         ComicBook book = new ComicBook(randomUUID().toString(),
+                bookCreateRequest.getCreatedBy(),
                 bookCreateRequest.getReleaseYear(),
                 bookCreateRequest.getTitle(),
                 bookCreateRequest.getWriter(),
@@ -46,10 +48,14 @@ public class ComicBookController {
         return ResponseEntity.created(URI.create("/books/" + bookResponse.getAsin())).body(bookResponse);
     }
 
-    @DeleteMapping("/delete/{asin}")
-    public ResponseEntity<Void> deleteComicBook(@PathVariable("asin") String asin) {
-        comicBookService.deleteComicBook(asin);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/delete/{asin}/createdBy/{name}")
+    public ResponseEntity<String> deleteComicBook(@PathVariable("asin") String asin, @PathVariable("name") String name) {
+        try {
+            comicBookService.deleteComicBook(asin, name);
+            return ResponseEntity.noContent().build();
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{asin}")
@@ -65,6 +71,7 @@ public class ComicBookController {
     private ComicBookResponse comicBookToResponse(ComicBook comicBook) {
         ComicBookResponse comicBookResponse = new ComicBookResponse();
         comicBookResponse.setAsin(comicBook.getAsin());
+        comicBookResponse.setCreatedBy(comicBook.getCreatedBy());
         comicBookResponse.setReleaseYear(comicBook.getReleaseYear());
         comicBookResponse.setTitle(comicBook.getTitle());
         comicBookResponse.setWriter(comicBook.getWriter());

@@ -4,10 +4,14 @@ import com.kenzie.appserver.repositories.ComicBookRepository;
 
 import com.kenzie.appserver.repositories.model.ComicBookRecord;
 import com.kenzie.appserver.service.model.ComicBook;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ComicBookService {
@@ -24,6 +28,7 @@ public class ComicBookService {
 
         for (ComicBookRecord record : bookRecords) {
             comicBooks.add(new ComicBook(record.getAsin(),
+                    record.getCreatedBy(),
                     record.getReleaseYear(),
                     record.getTitle(),
                     record.getWriter(),
@@ -37,6 +42,8 @@ public class ComicBookService {
     public ComicBook addNewBook(ComicBook book) {
         ComicBookRecord bookRecord = new ComicBookRecord();
         bookRecord.setAsin(book.getAsin());
+        bookRecord.setCreatedBy(book.getCreatedBy());
+        bookRecord.setCreatedAt(ZonedDateTime.now());
         bookRecord.setReleaseYear(book.getReleaseYear());
         bookRecord.setTitle(book.getTitle());
         bookRecord.setWriter(book.getWriter());
@@ -47,7 +54,19 @@ public class ComicBookService {
         return book;
     }
 
-    public void deleteComicBook(String asin) {
+    public void deleteComicBook(String asin, String name) {
+        Optional<ComicBookRecord> recordOptional = comicBookRepository.findByAsin(asin);
+
+        if (!recordOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comic does not exist.");
+        }
+
+        ComicBookRecord record = recordOptional.get();
+
+        if (!record.getCreatedBy().equals(name)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only the person who created the book may delete it.");
+        }
+
         comicBookRepository.deleteByAsin(asin);
     }
 
@@ -55,6 +74,7 @@ public class ComicBookService {
         ComicBook comicBook = comicBookRepository
                 .findById(asin)
                 .map(book -> new ComicBook (book.getAsin(),
+                        book.getCreatedBy(),
                         book.getReleaseYear(),
                         book.getTitle(),
                         book.getWriter(),

@@ -8,6 +8,9 @@ public class ComicBookResponse {
     @JsonProperty("asin")
     private String asin;
 
+    @JsonProperty("createdBy")
+    private String createdBy;
+
     @JsonProperty("releaseYear")
     private String releaseYear;
 
@@ -29,6 +32,14 @@ public class ComicBookResponse {
 
     public void setAsin(String asin) {
         this.asin = asin;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
     public String getReleaseYear() {
