@@ -6,9 +6,11 @@ import com.kenzie.appserver.service.model.ComicBook;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +18,7 @@ import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
@@ -195,5 +198,76 @@ public class ComicBookServiceTest {
         Assertions.assertEquals(record.getWriter(), comicBook.getWriter(), "The writer data matches");
         Assertions.assertEquals(record.getIllustrator(), comicBook.getIllustrator(), "The illustrator data matches");
         Assertions.assertEquals(record.getDescription(), comicBook.getDescription(), "The book description data matches");
+    }
+
+    @Test
+    void deleteComicBook_success() {
+        String asin = UUID.randomUUID().toString();
+        String createdBy = "Bob";
+
+        ComicBookRecord record = new ComicBookRecord();
+        record.setAsin(asin);
+        record.setCreatedBy(createdBy);
+        record.setCreatedAt(ZonedDateTime.now());
+        record.setReleaseYear("2022");
+        record.setTitle("Pizza Man");
+        record.setWriter("Bob");
+        record.setIllustrator("Alice");
+        record.setDescription("The tastiest super hero comic ever!");
+
+        ArgumentCaptor<String> asinCapture = ArgumentCaptor.forClass(String.class);
+
+        Optional<ComicBookRecord> recordOptional = Optional.of(record);
+        Mockito.when(comicBookRepository.findByAsin(asin)).thenReturn(recordOptional);
+        Mockito.doNothing().when(comicBookRepository).deleteByAsin(asinCapture.capture());
+        comicBookService.deleteComicBook(asin, createdBy);
+
+        Assertions.assertEquals(asin, asinCapture.getValue());
+    }
+
+    @Test
+    void deleteComicBook_comicDoesNotExist_throwsException() {
+        String asin = UUID.randomUUID().toString();
+        String createdBy = "Bob";
+        Optional<ComicBookRecord> recordOptional = Optional.empty();
+
+        Mockito.when(comicBookRepository.findByAsin(asin)).thenReturn(recordOptional);
+
+        Exception exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            comicBookService.deleteComicBook(asin, createdBy);
+        });
+
+        String expectedMessage = "Comic does not exist.";
+        String actualMessage = exception.getMessage();
+
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void deleteComicBook_wrongName_throwsException() {
+        String asin = UUID.randomUUID().toString();
+        String createdBy = "Alice";
+
+        ComicBookRecord record = new ComicBookRecord();
+        record.setAsin(asin);
+        record.setCreatedBy(createdBy);
+        record.setCreatedAt(ZonedDateTime.now());
+        record.setReleaseYear("2022");
+        record.setTitle("Pizza Man");
+        record.setWriter("Bob");
+        record.setIllustrator("Alice");
+        record.setDescription("The tastiest super hero comic ever!");
+
+        Optional<ComicBookRecord> recordOptional = Optional.of(record);
+        Mockito.when(comicBookRepository.findByAsin(asin)).thenReturn(recordOptional);
+
+        Exception exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            comicBookService.deleteComicBook(asin, "Bob");
+        });
+
+        String expectedMessage = "Only the person who created the book may delete it.";
+        String actualMessage = exception.getMessage();
+
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
 }

@@ -26,6 +26,10 @@ public class ComicBook {
         return this.asin;
     }
 
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
     public String getReleaseYear() {
         return this.releaseYear;
     }
