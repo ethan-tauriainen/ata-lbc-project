@@ -1,14 +1,15 @@
 package com.kenzie.appserver.repositories.model;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.kenzie.appserver.repositories.converter.ZonedDateTimeConverter;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @DynamoDBTable(tableName = "TB_COMIC_BOOKS")
 public class ComicBookRecord {
-    private Instant createdAt;  // Time object was created.
-    private Instant modifiedAt; // Time object was updated.
+    private ZonedDateTime createdAt;  // Time object was created.
+    private ZonedDateTime modifiedAt; // Time object was updated.
     private String createdBy;
     private String modifiedBy;
     private String asin;
@@ -18,24 +19,24 @@ public class ComicBookRecord {
     private String illustrator;
     private String description;
 
-    public ComicBookRecord() {
-        this.createdAt = Instant.now();
-    }
-
     @DynamoDBAttribute(attributeName = "MODIFIED")
-    @DynamoDBTypeConverted( converter = InstantConverter.class )
-    public Instant getModifiedAt() {
+    @DynamoDBTypeConverted( converter = ZonedDateTimeConverter.class )
+    public ZonedDateTime getModifiedAt() {
         return modifiedAt;
     }
 
     @DynamoDBAttribute(attributeName = "CREATED")
-    @DynamoDBTypeConverted( converter = InstantConverter.class )
-    public Instant getCreatedAt() {
+    @DynamoDBTypeConverted( converter = ZonedDateTimeConverter.class )
+    public ZonedDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setModifiedAt(Instant modifiedAt) {
+    public void setModifiedAt(ZonedDateTime modifiedAt) {
         this.modifiedAt = modifiedAt;
+    }
+
+    public void setCreatedAt(ZonedDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     @DynamoDBAttribute(attributeName = "CREATED_BY")
@@ -121,20 +122,5 @@ public class ComicBookRecord {
     @Override
     public int hashCode() {
         return Objects.hash(asin);
-    }
-
-    static public class InstantConverter implements DynamoDBTypeConverter<String, Instant> {
-
-        @Override
-        public String convert( final Instant time ) {
-
-            return time.toString();
-        }
-
-        @Override
-        public Instant unconvert( final String stringValue ) {
-
-            return Instant.parse(stringValue);
-        }
     }
 }
