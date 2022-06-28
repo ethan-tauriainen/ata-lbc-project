@@ -31,3 +31,4 @@ invoke/*.json
 /Solution/out.yml
 /Solution/bucket-name.txt
 /Application/out.yml
+/-multInst
