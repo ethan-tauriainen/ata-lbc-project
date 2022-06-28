@@ -11,8 +11,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
@@ -164,5 +166,31 @@ public class ComicBookServiceTest {
                 "The release year matches");
         Assertions.assertEquals(addedBook.getWriter(), book.getWriter(),
                 "The writer matches.");
+    }
+
+    @Test
+    void findBookByAsin() {
+        String asin = randomUUID().toString();
+
+        ComicBookRecord record = new ComicBookRecord();
+        record.setAsin(asin);
+        record.setReleaseYear("2000");
+        record.setTitle("Sample Book");
+        record.setWriter("Sample author");
+        record.setIllustrator("Sample illustrator");
+        record.setDescription("Sample description");
+
+        when(comicBookRepository.findById(asin)).thenReturn(Optional.of(record));
+
+        // WHEN
+        ComicBook comicBook = comicBookService.findBookByAsin(asin);
+
+        // THEN
+        Assertions.assertNotNull(comicBook, "The book is returned");
+        Assertions.assertEquals(record.getAsin(), comicBook.getAsin(), "The asin matches");
+        Assertions.assertEquals(record.getTitle(), comicBook.getTitle(), "The book title matches");
+        Assertions.assertEquals(record.getWriter(), comicBook.getWriter(), "The writer data matches");
+        Assertions.assertEquals(record.getIllustrator(), comicBook.getIllustrator(), "The illustrator data matches");
+        Assertions.assertEquals(record.getDescription(), comicBook.getDescription(), "The book description data matches");
     }
 }
