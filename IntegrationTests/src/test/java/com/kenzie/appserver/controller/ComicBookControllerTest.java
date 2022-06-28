@@ -64,7 +64,7 @@ class ComicBookControllerTest {
 
         mapper.registerModule(new JavaTimeModule());
 
-        comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), releaseYear, title, writer, illustrator, description));
+        ComicBook book = comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), releaseYear, title, writer, illustrator, description));
 
         // WHEN
         mvc.perform(post("/books")
@@ -82,12 +82,14 @@ class ComicBookControllerTest {
                         .value(is(illustrator)))
                 .andExpect(jsonPath("description")
                         .value(is(description)));
+
+        comicBookService.deleteComicBook(book.getAsin());
+
     }
 
     @Test
     void getAllBooks_success() throws Exception {
         // GIVEN
-        List<ComicBook> books = new ArrayList<>();
 
         String releaseYear = "2000";
         String title = "Magic City";
@@ -105,15 +107,9 @@ class ComicBookControllerTest {
 
         ComicBook book2 = comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), releaseYear2, title2, writer2, illustrator2, description2));
 
-        books.add(book1);
-        books.add(book2);
-
-
-        List<ComicBook> bookList = comicBookService.findAll();
+        comicBookService.findAll();
 
         mapper.registerModule(new JavaTimeModule());
-
-        when(comicBookService.findAll()).thenReturn(bookList);
 
         // WHEN
         mvc.perform(get("/books/all")
@@ -133,11 +129,9 @@ class ComicBookControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].illustrator").isString())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].description").isString());
 
-        verify(comicBookService).findAll();
+        comicBookService.deleteComicBook(book1.getAsin());
+        comicBookService.deleteComicBook(book2.getAsin());
     }
-
-
-
 
 
 //    public void getById_Exists() throws Exception {
