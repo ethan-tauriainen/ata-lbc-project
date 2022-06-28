@@ -24,6 +24,7 @@ public class ComicBookService {
 
         for (ComicBookRecord record : bookRecords) {
             comicBooks.add(new ComicBook(record.getAsin(),
+                    record.getCreatedBy(),
                     record.getReleaseYear(),
                     record.getTitle(),
                     record.getWriter(),
@@ -55,6 +56,7 @@ public class ComicBookService {
         ComicBook comicBook = comicBookRepository
                 .findById(asin)
                 .map(book -> new ComicBook (book.getAsin(),
+                        book.getCreatedBy(),
                         book.getReleaseYear(),
                         book.getTitle(),
                         book.getWriter(),

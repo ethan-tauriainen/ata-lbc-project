@@ -36,7 +36,7 @@ public class ComicBookServiceTest {
     @Test
     void findAll() {
         String asin = UUID.randomUUID().toString();
-
+        String createdBy = "Bob";
         String releaseYear = "1972";
         String title = "Werewolf by Night";
         String writer = "Roy Thomas";
@@ -45,6 +45,7 @@ public class ComicBookServiceTest {
 
         ComicBook book1 = new ComicBook(
                 asin,
+                createdBy,
                 releaseYear,
                 title,
                 writer,
@@ -53,7 +54,7 @@ public class ComicBookServiceTest {
         );
 
         String asin2 = UUID.randomUUID().toString();
-
+        String createdBy2 = "Alice";
         String releaseYear2 = "2022";
         String title2 = "Gang of Three";
         String writer2 = "Behzod Mamadiev";
@@ -62,6 +63,7 @@ public class ComicBookServiceTest {
 
         ComicBook book2 = new ComicBook(
                 asin2,
+                createdBy2,
                 releaseYear2,
                 title2,
                 writer2,
@@ -129,7 +131,7 @@ public class ComicBookServiceTest {
     @Test
     void addNewBook() {
         String asin = UUID.randomUUID().toString();
-
+        String createdBy = "Bob";
         String releaseYear = "1999";
         String title = "Owl by Night";
         String writer = "Jack Dorsey";
@@ -138,6 +140,7 @@ public class ComicBookServiceTest {
 
         ComicBook book = new ComicBook(
                 asin,
+                createdBy,
                 releaseYear,
                 title,
                 writer,

@@ -34,6 +34,7 @@ public class ComicBookController {
     @PostMapping
     public ResponseEntity<ComicBookResponse> addNewBook(@RequestBody ComicBookCreateRequest bookCreateRequest) {
         ComicBook book = new ComicBook(randomUUID().toString(),
+                bookCreateRequest.getCreatedBy(),
                 bookCreateRequest.getReleaseYear(),
                 bookCreateRequest.getTitle(),
                 bookCreateRequest.getWriter(),

@@ -5,14 +5,16 @@ import java.util.List;
 public class ComicBook {
 
     private final String asin;
+    private final String createdBy;
     private final String releaseYear;
     private final String title;
     private final String writer;
     private final String illustrator;
     private final String description;
 
-    public ComicBook(String asin, String releaseYear, String title, String writer, String illustrator, String description) {
+    public ComicBook(String asin, String createdBy, String releaseYear, String title, String writer, String illustrator, String description) {
         this.asin = asin;
+        this.createdBy = createdBy;
         this.releaseYear = releaseYear;
         this.title = title;
         this.writer = writer;

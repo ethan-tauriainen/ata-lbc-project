@@ -6,6 +6,10 @@ import javax.validation.constraints.NotEmpty;
 
 public class ComicBookCreateRequest {
     @NotEmpty
+    @JsonProperty("createdBy")
+    private String createdBy;
+
+    @NotEmpty
     @JsonProperty("releaseYear")
     private String releaseYear;
 
@@ -24,6 +28,14 @@ public class ComicBookCreateRequest {
     @NotEmpty
     @JsonProperty("description")
     private String description;
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
     public String getReleaseYear() {
         return releaseYear;

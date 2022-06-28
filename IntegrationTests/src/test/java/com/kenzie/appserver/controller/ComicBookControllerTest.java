@@ -48,6 +48,7 @@ class ComicBookControllerTest {
     @Test
     public void createNewBook_CreateSuccessful() throws Exception {
         // GIVEN
+        String createdBy = "Bob";
         String releaseYear = "2021";
         String title = "Not for Every One";
         String writer = "Anonymous";
@@ -56,6 +57,7 @@ class ComicBookControllerTest {
 
 
         ComicBookCreateRequest bookCreateRequest = new ComicBookCreateRequest();
+        bookCreateRequest.setCreatedBy(createdBy);
         bookCreateRequest.setReleaseYear(releaseYear);
         bookCreateRequest.setTitle(title);
         bookCreateRequest.setWriter(writer);
@@ -64,7 +66,7 @@ class ComicBookControllerTest {
 
         mapper.registerModule(new JavaTimeModule());
 
-        comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), releaseYear, title, writer, illustrator, description));
+        comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), createdBy, releaseYear, title, writer, illustrator, description));
 
         // WHEN
         mvc.perform(post("/books")
@@ -87,33 +89,34 @@ class ComicBookControllerTest {
     @Test
     void getAllBooks_success() throws Exception {
         // GIVEN
-        List<ComicBook> books = new ArrayList<>();
-
+//        List<ComicBook> books = new ArrayList<>();
+        String createdBy = "Bob";
         String releaseYear = "2000";
         String title = "Magic City";
         String writer = "Behzod Mamadiev";
         String illustrator = "Ethan Tauriainen";
         String description = "An interesting book written and illustrated by a group of nerds";
 
-        ComicBook book1 = comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), releaseYear, title, writer, illustrator, description));
+        ComicBook book1 = comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), createdBy, releaseYear, title, writer, illustrator, description));
 
+        String createdBy2 = "Alice";
         String releaseYear2 = "2010";
         String title2 = "Ghost City";
         String writer2 = "Angel Prado";
         String illustrator2 = "Ethan Tauriainen";
         String description2 = "The best comic book of all times!";
 
-        ComicBook book2 = comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), releaseYear2, title2, writer2, illustrator2, description2));
+        ComicBook book2 = comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), createdBy2, releaseYear2, title2, writer2, illustrator2, description2));
 
-        books.add(book1);
-        books.add(book2);
+//        books.add(book1);
+//        books.add(book2);
 
 
         List<ComicBook> bookList = comicBookService.findAll();
 
         mapper.registerModule(new JavaTimeModule());
 
-        when(comicBookService.findAll()).thenReturn(bookList);
+//        when(comicBookService.findAll()).thenReturn(bookList);
 
         // WHEN
         mvc.perform(get("/books/all")
@@ -133,7 +136,7 @@ class ComicBookControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].illustrator").isString())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].description").isString());
 
-        verify(comicBookService).findAll();
+//        verify(comicBookService).findAll();
     }
 
 
