@@ -2,6 +2,8 @@ package com.kenzie.appserver.controller;
 
 import com.kenzie.appserver.IntegrationTest;
 import com.kenzie.appserver.controller.model.ComicBookCreateRequest;
+import com.kenzie.appserver.repositories.ComicBookRepository;
+import com.kenzie.appserver.repositories.model.ComicBookRecord;
 import com.kenzie.appserver.service.ComicBookService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,11 +14,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -30,6 +39,7 @@ class ComicBookControllerTest {
 
     @Autowired
     ComicBookService comicBookService;
+    ComicBookRepository comicBookRepository;
 
     private final MockNeat mockNeat = MockNeat.threadLocal();
 
@@ -52,9 +62,9 @@ class ComicBookControllerTest {
         bookCreateRequest.setIllustrator(illustrator);
         bookCreateRequest.setDescription(description);
 
-//        mapper.registerModule(new JavaTimeModule());
+        mapper.registerModule(new JavaTimeModule());
 
-//        ComicBook book = comicBookService.addNewBook()
+        comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), releaseYear, title, writer, illustrator, description));
 
         // WHEN
         mvc.perform(post("/books")
@@ -73,6 +83,59 @@ class ComicBookControllerTest {
                 .andExpect(jsonPath("description")
                         .value(is(description)));
     }
+
+    @Test
+    void getAllBooks_success() throws Exception {
+        // GIVEN
+        List<ComicBook> books = new ArrayList<>();
+
+        String releaseYear = "2000";
+        String title = "Magic City";
+        String writer = "Behzod Mamadiev";
+        String illustrator = "Ethan Tauriainen";
+        String description = "An interesting book written and illustrated by a group of nerds";
+
+        ComicBook book1 = comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), releaseYear, title, writer, illustrator, description));
+
+        String releaseYear2 = "2010";
+        String title2 = "Ghost City";
+        String writer2 = "Angel Prado";
+        String illustrator2 = "Ethan Tauriainen";
+        String description2 = "The best comic book of all times!";
+
+        ComicBook book2 = comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), releaseYear2, title2, writer2, illustrator2, description2));
+
+        books.add(book1);
+        books.add(book2);
+
+
+        List<ComicBook> bookList = comicBookService.findAll();
+
+        mapper.registerModule(new JavaTimeModule());
+
+        when(comicBookService.findAll()).thenReturn(bookList);
+
+        // WHEN
+        mvc.perform(get("/books/all")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON))
+                // THEN
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].releaseYear").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].writer").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].illustrator").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].releaseYear").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].writer").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].illustrator").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].description").isString());
+
+        verify(comicBookService).findAll();
+    }
+
 
 
 
