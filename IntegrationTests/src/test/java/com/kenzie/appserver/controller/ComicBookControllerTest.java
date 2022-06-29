@@ -1,6 +1,5 @@
 package com.kenzie.appserver.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.kenzie.appserver.IntegrationTest;
 import com.kenzie.appserver.controller.model.ComicBookCreateRequest;
@@ -13,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.kenzie.appserver.service.model.ComicBook;
 import net.andreinc.mockneat.MockNeat;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -69,26 +67,18 @@ class ComicBookControllerTest {
 
         mapper.registerModule(new JavaTimeModule());
 
-        ComicBook book = comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), createdBy, releaseYear, title, writer, illustrator, description));
-
         // WHEN
-        mvc.perform(post("/books")
+        String response = mvc.perform(post("/books")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(bookCreateRequest)))
-                // THEN
-                .andExpect(jsonPath("releaseYear")
-                        .value(is(releaseYear)))
-                .andExpect(jsonPath("title")
-                        .value(is(title)))
-                .andExpect(jsonPath("writer")
-                        .value(is(writer)))
-                .andExpect(jsonPath("illustrator")
-                        .value(is(illustrator)))
-                .andExpect(jsonPath("description")
-                        .value(is(description)));
+                //THEN
+                        .andExpect(status().isCreated())
+                        .andReturn().getResponse().getContentAsString();
 
-        comicBookService.deleteComicBook(book.getAsin(), book.getCreatedBy());
+        ComicBookResponse comicBookResponse = mapper.readValue(response, new TypeReference<ComicBookResponse>() {});
+
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", comicBookResponse.getAsin(), comicBookResponse.getCreatedBy()));
 
     }
 
@@ -100,7 +90,7 @@ class ComicBookControllerTest {
         String title = "Magic City";
         String writer = "Behzod Mamadiev";
         String illustrator = "Ethan Tauriainen";
-        String description = "An interesting book written and illustrated by a group of nerds";
+        String description = "An interesting book written and illustrated by a group of nerds.";
 
         ComicBook book1 = comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), createdBy, releaseYear, title, writer, illustrator, description));
 
@@ -114,9 +104,9 @@ class ComicBookControllerTest {
         ComicBook book2 = comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), createdBy2, releaseYear2, title2, writer2, illustrator2, description2));
 
         mapper.registerModule(new JavaTimeModule());
-        comicBookService.findAll();
+        //comicBookService.findAll();
 
-        mapper.registerModule(new JavaTimeModule());
+        //mapper.registerModule(new JavaTimeModule());
 
         // WHEN
         mvc.perform(get("/books/all")
@@ -125,19 +115,21 @@ class ComicBookControllerTest {
                 // THEN
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].releaseYear").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].writer").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].illustrator").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].releaseYear").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].writer").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].illustrator").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].description").isString());
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].createdBy").value("Bob"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].releaseYear").value("2000"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Magic City"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].writer").value("Behzod Mamadiev"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].illustrator").value("Ethan Tauriainen"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value("An interesting book written and illustrated by a group of nerds."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].createdBy").value("Alice"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].releaseYear").value("2010"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").value("Ghost City"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].writer").value("Angel Prado"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].illustrator").value("Ethan Tauriainen"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].description").value("The best comic book of all times!"));
 
-        comicBookService.deleteComicBook(book1.getAsin(), book1.getCreatedBy());
-        comicBookService.deleteComicBook(book2.getAsin(), book2.getCreatedBy());
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", book1.getAsin(), book1.getCreatedBy()));
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", book2.getAsin(), book2.getCreatedBy()));
     }
 
 
