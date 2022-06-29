@@ -270,4 +270,72 @@ public class ComicBookServiceTest {
 
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
+
+    /** ------------------------------------------------------------------------
+     *  comicBookService.updateComicBook
+     *  ------------------------------------------------------------------------ **/
+    @Test
+    void updateComicBook_success() {
+        String asin = UUID.randomUUID().toString();
+        String createdBy = "Megan";
+
+        ComicBookRecord recordOne = new ComicBookRecord();
+        recordOne.setAsin(asin);
+        recordOne.setCreatedBy(createdBy);
+        recordOne.setCreatedAt(ZonedDateTime.now());
+        recordOne.setReleaseYear("1993");
+        recordOne.setTitle("Invincible");
+        recordOne.setWriter("Saylem");
+        recordOne.setIllustrator("Augustus");
+        recordOne.setDescription("The one and only, Invincible.");
+
+        ComicBook updatedComicBook = new ComicBook(
+                asin,
+                createdBy,
+                recordOne.getReleaseYear(),
+                "Invincible",
+                "Saylem",
+                "Augustus",
+                "He's the strongest man in the world. The one and only, Invincible."
+        );
+
+        ArgumentCaptor<ComicBookRecord> recordCaptor = ArgumentCaptor.forClass(ComicBookRecord.class);
+
+        Optional<ComicBookRecord> recordOptionalOne = Optional.of(recordOne);
+
+        Mockito.when(comicBookRepository.findByAsin(asin)).thenReturn(recordOptionalOne);
+        comicBookService.updateComicBook(updatedComicBook);
+
+        verify(comicBookRepository).save(recordCaptor.capture());
+        ComicBookRecord storedComicBook = recordCaptor.getValue();
+
+        Assertions.assertTrue(storedComicBook.getDescription().contains(updatedComicBook.getDescription()), "Description should be updated.");
+    }
+
+    @Test
+    void updateComicBook_comicDoesNotExist_throwsException() {
+        ComicBook fakeComicBook = new ComicBook(
+                UUID.randomUUID().toString(),
+                "Megan",
+                "1993",
+                "Invincible",
+                "Saylem",
+                "Augustus",
+                "He's the strongest man in the world. The one and only, Invincible."
+        );
+
+        when(comicBookRepository.findByAsin(fakeComicBook.getAsin())).thenReturn(Optional.empty());
+
+        Exception exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            comicBookService.updateComicBook(fakeComicBook);
+        });
+
+        String expectedMessage = "Comic Book does not exist.";
+        String actualMessage = exception.getMessage();
+
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+//    @Test
+//    void updateComicBook_wrongName_throwsException() {}
+
 }

@@ -167,4 +167,66 @@ class ComicBookControllerTest {
 //                        .value(is(name)))
 //                .andExpect(status().isCreated());
 //    }
+
+    @Test
+    public void deleteComicBook_success() throws Exception {
+        String createdBy = "Alice";
+
+        ComicBookCreateRequest request = new ComicBookCreateRequest();
+        request.setCreatedBy(createdBy);
+        request.setReleaseYear("2022");
+        request.setTitle("Awesome Sauce");
+        request.setWriter("Bob");
+        request.setIllustrator("Nancy");
+        request.setDescription("Splendid sauce. Awesome story.");
+
+        String response = mvc.perform(post("/books")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(request)))
+                        .andExpect(status().isCreated())
+                        .andReturn().getResponse().getContentAsString();
+
+        ComicBookResponse comicBookResponse = mapper.readValue(response, new TypeReference<ComicBookResponse>() {});
+        String asin = comicBookResponse.getAsin();
+
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", asin, createdBy))
+                        .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteComicBook_wrongName_badRequest() throws Exception {
+        String createdBy = "Alice";
+
+        ComicBookCreateRequest request = new ComicBookCreateRequest();
+        request.setCreatedBy(createdBy);
+        request.setReleaseYear("2022");
+        request.setTitle("Awesome Sauce");
+        request.setWriter("Bob");
+        request.setIllustrator("Nancy");
+        request.setDescription("Splendid sauce. Awesome story.");
+
+        String response = mvc.perform(post("/books")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(request)))
+                        .andExpect(status().isCreated())
+                        .andReturn().getResponse().getContentAsString();
+
+        ComicBookResponse comicBookResponse = mapper.readValue(response, new TypeReference<ComicBookResponse>() {});
+        String asin = comicBookResponse.getAsin();
+
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", asin, "Bob"))
+                .andExpect(status().isBadRequest());
+
+        // cleanup
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", asin, createdBy))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteComicBook_nonExistentAsin_badRequest() throws Exception {
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", UUID.randomUUID().toString(), "Bob"))
+                .andExpect(status().isBadRequest());
+    }
 }
