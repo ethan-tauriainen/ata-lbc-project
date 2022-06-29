@@ -2,6 +2,7 @@ package com.kenzie.appserver.repositories;
 
 import com.kenzie.appserver.repositories.model.ComicBookRecord;
 
+import com.kenzie.appserver.service.model.ComicBook;
 import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
 import org.springframework.data.repository.CrudRepository;
 
