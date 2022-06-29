@@ -270,4 +270,34 @@ public class ComicBookServiceTest {
 
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
-}
+//
+//    /** ------------------------------------------------------------------------
+//     *  comicBookService.updateComicBook
+//     *  ------------------------------------------------------------------------ **/
+//    @Test
+//    void updateComicBook_success() {
+//        String asin = UUID.randomUUID().toString();
+//        String createdBy = "Megan";
+//
+//        ComicBookRecord record = new ComicBookRecord();
+//        record.setAsin(asin);
+//        record.setCreatedBy(createdBy);
+//        record.setCreatedAt(ZonedDateTime.now());
+//        record.setReleaseYear("1993");
+//        record.setTitle("Invincible");
+//        record.setWriter("Saylem");
+//        record.setIllustrator("Augustus");
+//        record.setDescription("The one and only, Invincible.");
+//
+//        Optional<ComicBookRecord> recordOptional = Optional.of(record);
+//
+//        Mockito.when(comicBookRepository.findByAsin(asin)).thenReturn(recordOptional);
+//
+//
+//    }
+//    @Test
+//    void updateComicBook_comicDoesNotExist_throwsException() {}
+//    @Test
+//    void updateComicBook_wrongName_throwsException() {}
+//
+//}
