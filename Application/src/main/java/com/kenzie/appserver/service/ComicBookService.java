@@ -85,4 +85,31 @@ public class ComicBookService {
         return comicBook;
     }
 
+    public void updateComicBook(ComicBook comicBook) {
+        Optional<ComicBookRecord> optionalComicBookRecord = comicBookRepository.findByAsin(comicBook.getAsin());
+
+        if (!optionalComicBookRecord.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comic Book does not exist.");
+        }
+
+        ComicBookRecord record = optionalComicBookRecord.get();
+
+        if (!record.getCreatedBy().equals(comicBook.getCreatedBy())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only the person who created the book may update it.");
+        }
+
+        ComicBookRecord updatedRecord = new ComicBookRecord();
+        updatedRecord.setAsin(comicBook.getAsin());
+        updatedRecord.setCreatedBy(comicBook.getCreatedBy());
+        updatedRecord.setDescription(comicBook.getDescription());
+        updatedRecord.setIllustrator((comicBook.getIllustrator()));
+        updatedRecord.setTitle(comicBook.getTitle());
+        updatedRecord.setWriter(comicBook.getWriter());
+        updatedRecord.setReleaseYear(comicBook.getReleaseYear());
+        updatedRecord.setModifiedAt(ZonedDateTime.now());
+        updatedRecord.setModifiedBy(comicBook.getCreatedBy());
+
+        comicBookRepository.save(updatedRecord);
+    }
+
 }

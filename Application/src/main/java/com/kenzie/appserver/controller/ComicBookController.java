@@ -2,6 +2,8 @@ package com.kenzie.appserver.controller;
 
 import com.kenzie.appserver.controller.model.ComicBookCreateRequest;
 import com.kenzie.appserver.controller.model.ComicBookResponse;
+import com.kenzie.appserver.controller.model.ComicBookUpdateRequest;
+import com.kenzie.appserver.repositories.model.ComicBookRecord;
 import com.kenzie.appserver.service.ComicBookService;
 import com.kenzie.appserver.service.model.ComicBook;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +68,25 @@ public class ComicBookController {
         }
         ComicBookResponse bookResponse = comicBookToResponse(book);
         return ResponseEntity.ok(bookResponse);
+    }
+
+    @PutMapping
+    public ResponseEntity updateComicBook(@RequestBody ComicBookUpdateRequest comicBookUpdateRequest) {
+        try {
+            ComicBook comicBook = new ComicBook(
+                    comicBookUpdateRequest.getAsin(),
+                    comicBookUpdateRequest.getCreatedBy(),
+                    comicBookUpdateRequest.getReleaseYear(),
+                    comicBookUpdateRequest.getTitle(),
+                    comicBookUpdateRequest.getWriter(),
+                    comicBookUpdateRequest.getIllustrator(),
+                    comicBookUpdateRequest.getDescription());
+            comicBookService.updateComicBook(comicBook);
+            ComicBookResponse concertResponse = comicBookToResponse(comicBook);
+            return ResponseEntity.ok(concertResponse);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     private ComicBookResponse comicBookToResponse(ComicBook comicBook) {
