@@ -1,9 +1,11 @@
 package com.kenzie.appserver.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.kenzie.appserver.IntegrationTest;
 import com.kenzie.appserver.controller.model.ComicBookCreateRequest;
 import com.kenzie.appserver.controller.model.ComicBookResponse;
+import com.kenzie.appserver.controller.model.ComicBookUpdateRequest;
 import com.kenzie.appserver.repositories.ComicBookRepository;
 import com.kenzie.appserver.repositories.model.ComicBookRecord;
 import com.kenzie.appserver.service.ComicBookService;
@@ -20,6 +22,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -200,5 +203,132 @@ class ComicBookControllerTest {
     public void deleteComicBook_nonExistentAsin_badRequest() throws Exception {
         mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", UUID.randomUUID().toString(), "Bob"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateComicBook_success() throws Exception {
+        ComicBookCreateRequest createRequest = new ComicBookCreateRequest();
+        createRequest.setCreatedBy("Megan");
+        createRequest.setTitle("Invincible");
+        createRequest.setWriter("Augustus");
+        createRequest.setIllustrator("Saylem");
+        createRequest.setReleaseYear("1993");
+        createRequest.setDescription("The one and only, Invincible! The greatest superhero on Earth.");
+
+        mapper.registerModule(new JavaTimeModule());
+
+        String createResponse = mvc.perform(post("/books")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(createRequest)))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        ComicBookResponse createBookResponse = mapper.readValue(createResponse, new TypeReference<ComicBookResponse>() {} );
+        String asin = createBookResponse.getAsin();
+
+        ComicBookUpdateRequest updateRequest = new ComicBookUpdateRequest();
+        updateRequest.setAsin(asin);
+        updateRequest.setCreatedBy("Megan");
+        updateRequest.setTitle("Invincible");
+        updateRequest.setIllustrator("Ethan");
+        updateRequest.setWriter("Behzod");
+        updateRequest.setReleaseYear("2021");
+        updateRequest.setDescription("The one and only!");
+        updateRequest.setModifiedAt(ZonedDateTime.now());
+
+        mvc.perform(put("/books")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updateRequest)))
+                .andExpect(status().isOk());
+        //clean up
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", asin, updateRequest.getCreatedBy()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void updateComicBook_wrongName_badRequest() throws Exception {
+        ComicBookCreateRequest createRequest = new ComicBookCreateRequest();
+        createRequest.setCreatedBy("Megan");
+        createRequest.setTitle("Invincible");
+        createRequest.setWriter("Augustus");
+        createRequest.setIllustrator("Saylem");
+        createRequest.setReleaseYear("1993");
+        createRequest.setDescription("The one and only, Invincible! The greatest superhero on Earth.");
+
+        mapper.registerModule(new JavaTimeModule());
+
+        String createResponse = mvc.perform(post("/books")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(createRequest)))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        ComicBookResponse createBookResponse = mapper.readValue(createResponse, new TypeReference<ComicBookResponse>() {} );
+        String asin = createBookResponse.getAsin();
+
+        ComicBookUpdateRequest updateRequest = new ComicBookUpdateRequest();
+        updateRequest.setAsin(asin);
+        updateRequest.setCreatedBy("WRONG-NAME");
+        updateRequest.setTitle("Invincible");
+        updateRequest.setIllustrator("Ethan");
+        updateRequest.setWriter("Behzod");
+        updateRequest.setReleaseYear("2021");
+        updateRequest.setDescription("The one and only!");
+        updateRequest.setModifiedAt(ZonedDateTime.now());
+
+        mvc.perform(put("/books")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(updateRequest)))
+                .andExpect(status().isBadRequest());
+        // clean up
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", asin, createRequest.getCreatedBy()))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void updateComicBook_nonExistentAsin_badRequest() throws Exception {
+        ComicBookCreateRequest createRequest = new ComicBookCreateRequest();
+        createRequest.setCreatedBy("Megan");
+        createRequest.setTitle("Invincible");
+        createRequest.setWriter("Augustus");
+        createRequest.setIllustrator("Saylem");
+        createRequest.setReleaseYear("1993");
+        createRequest.setDescription("The one and only, Invincible! The greatest superhero on Earth.");
+
+        mapper.registerModule(new JavaTimeModule());
+
+        String response = mvc.perform(post("/books")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(createRequest)))
+                .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
+
+        ComicBookResponse createBookResponse = mapper.readValue(response, new TypeReference<ComicBookResponse>() {} );
+        String asin = createBookResponse.getAsin();
+
+        String nonExistentAsin = UUID.randomUUID().toString();
+
+        ComicBookUpdateRequest updateRequest = new ComicBookUpdateRequest();
+        updateRequest.setAsin(nonExistentAsin);
+        updateRequest.setCreatedBy("Megan");
+        updateRequest.setTitle("Invincible");
+        updateRequest.setIllustrator("Ethan");
+        updateRequest.setWriter("Behzod");
+        updateRequest.setReleaseYear("2021");
+        updateRequest.setDescription("The one and only!");
+        updateRequest.setModifiedAt(ZonedDateTime.now());
+
+        mvc.perform(put("/books")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(updateRequest)))
+                .andExpect(status().isBadRequest());
+        //clean up
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", asin, createRequest.getCreatedBy()))
+                .andExpect(status().isNoContent());
     }
 }

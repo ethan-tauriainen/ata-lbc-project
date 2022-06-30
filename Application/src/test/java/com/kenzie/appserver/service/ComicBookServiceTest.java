@@ -279,20 +279,20 @@ public class ComicBookServiceTest {
         String asin = UUID.randomUUID().toString();
         String createdBy = "Megan";
 
-        ComicBookRecord recordOne = new ComicBookRecord();
-        recordOne.setAsin(asin);
-        recordOne.setCreatedBy(createdBy);
-        recordOne.setCreatedAt(ZonedDateTime.now());
-        recordOne.setReleaseYear("1993");
-        recordOne.setTitle("Invincible");
-        recordOne.setWriter("Saylem");
-        recordOne.setIllustrator("Augustus");
-        recordOne.setDescription("The one and only, Invincible.");
+        ComicBookRecord record = new ComicBookRecord();
+        record.setAsin(asin);
+        record.setCreatedBy(createdBy);
+        record.setCreatedAt(ZonedDateTime.now());
+        record.setReleaseYear("1993");
+        record.setTitle("Invincible");
+        record.setWriter("Saylem");
+        record.setIllustrator("Augustus");
+        record.setDescription("The one and only, Invincible.");
 
         ComicBook updatedComicBook = new ComicBook(
                 asin,
                 createdBy,
-                recordOne.getReleaseYear(),
+                record.getReleaseYear(),
                 "Invincible",
                 "Saylem",
                 "Augustus",
@@ -301,7 +301,7 @@ public class ComicBookServiceTest {
 
         ArgumentCaptor<ComicBookRecord> recordCaptor = ArgumentCaptor.forClass(ComicBookRecord.class);
 
-        Optional<ComicBookRecord> recordOptionalOne = Optional.of(recordOne);
+        Optional<ComicBookRecord> recordOptionalOne = Optional.of(record);
 
         Mockito.when(comicBookRepository.findByAsin(asin)).thenReturn(recordOptionalOne);
         comicBookService.updateComicBook(updatedComicBook);
@@ -335,7 +335,39 @@ public class ComicBookServiceTest {
 
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
-//    @Test
-//    void updateComicBook_wrongName_throwsException() {}
+    @Test
+    void updateComicBook_wrongName_throwsException() {
+        ComicBookRecord record = new ComicBookRecord();
+        record.setAsin(UUID.randomUUID().toString());
+        record.setCreatedBy("Megan");
+        record.setCreatedAt(ZonedDateTime.now());
+        record.setReleaseYear("1993");
+        record.setTitle("Invincible");
+        record.setWriter("Saylem");
+        record.setIllustrator("Augustus");
+        record.setDescription("The one and only, Invincible.");
+
+        ComicBook wrongNameComic = new ComicBook(
+                record.getAsin(),
+                "Angel",
+                record.getReleaseYear(),
+                "Invincible",
+                "Saylem",
+                "Augustus",
+                "He's the strongest man in the world. The one and only, Invincible."
+        );
+
+        Optional<ComicBookRecord> recordOptionalOne = Optional.of(record);
+        when(comicBookRepository.findByAsin(wrongNameComic.getAsin())).thenReturn(recordOptionalOne);
+
+        Exception exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
+            comicBookService.updateComicBook(wrongNameComic);
+        });
+
+        String expectedMessage = "Only the person who created the book may update it.";
+        String actualMessage = exception.getMessage();
+
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
 
 }
