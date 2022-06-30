@@ -79,7 +79,19 @@ class ComicBookControllerTest {
         ComicBookResponse comicBookResponse = mapper.readValue(response, new TypeReference<ComicBookResponse>() {});
 
         mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", comicBookResponse.getAsin(), comicBookResponse.getCreatedBy()));
+    }
 
+    @Test
+    public void createNewBook_empty_badRequest() throws Exception {
+        // GIVEN
+
+        // WHEN
+        mvc.perform(post("/books")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString("")))
+                //THEN
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -104,9 +116,6 @@ class ComicBookControllerTest {
         ComicBook book2 = comicBookService.addNewBook(new ComicBook(UUID.randomUUID().toString(), createdBy2, releaseYear2, title2, writer2, illustrator2, description2));
 
         mapper.registerModule(new JavaTimeModule());
-        //comicBookService.findAll();
-
-        //mapper.registerModule(new JavaTimeModule());
 
         // WHEN
         mvc.perform(get("/books/all")
@@ -115,7 +124,6 @@ class ComicBookControllerTest {
                 // THEN
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].createdBy").value("Bob"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].releaseYear").value("2000"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Magic City"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].writer").value("Behzod Mamadiev"))
@@ -131,42 +139,6 @@ class ComicBookControllerTest {
         mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", book1.getAsin(), book1.getCreatedBy()));
         mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", book2.getAsin(), book2.getCreatedBy()));
     }
-
-
-//    public void getById_Exists() throws Exception {
-//        String id = UUID.randomUUID().toString();
-//        String name = mockNeat.strings().valStr();
-//
-//        Example example = new Example(id, name);
-//        Example persistedExample = exampleService.addNewExample(example);
-//        mvc.perform(get("/example/{id}", persistedExample.getId())
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("id")
-//                        .value(is(id)))
-//                .andExpect(jsonPath("name")
-//                        .value(is(name)))
-//                .andExpect(status().isOk());
-//    }
-//
-//    @Test
-//    public void createExample_CreateSuccessful() throws Exception {
-//        String name = mockNeat.strings().valStr();
-//
-//        ExampleCreateRequest exampleCreateRequest = new ExampleCreateRequest();
-//        exampleCreateRequest.setName(name);
-//
-//        mapper.registerModule(new JavaTimeModule());
-//
-//        mvc.perform(post("/example")
-//                        .accept(MediaType.APPLICATION_JSON)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(mapper.writeValueAsString(exampleCreateRequest)))
-//                .andExpect(jsonPath("id")
-//                        .exists())
-//                .andExpect(jsonPath("name")
-//                        .value(is(name)))
-//                .andExpect(status().isCreated());
-//    }
 
     @Test
     public void deleteComicBook_success() throws Exception {
