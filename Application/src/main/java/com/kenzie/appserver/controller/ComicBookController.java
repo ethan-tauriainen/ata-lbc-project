@@ -62,6 +62,7 @@ public class ComicBookController {
 
     @GetMapping("/{asin}")
     public ResponseEntity<ComicBookResponse> findBookByAsin(@PathVariable("asin") String asin) {
+
         ComicBook book = comicBookService.findBookByAsin(asin);
 
         ComicBookResponse bookResponse = comicBookToResponse(book);

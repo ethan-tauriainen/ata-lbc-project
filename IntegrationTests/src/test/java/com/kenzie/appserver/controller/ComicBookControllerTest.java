@@ -81,7 +81,8 @@ class ComicBookControllerTest {
 
         ComicBookResponse comicBookResponse = mapper.readValue(response, new TypeReference<ComicBookResponse>() {});
 
-        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", comicBookResponse.getAsin(), comicBookResponse.getCreatedBy()));
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", comicBookResponse.getAsin(), comicBookResponse.getCreatedBy()))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -127,20 +128,23 @@ class ComicBookControllerTest {
                 // THEN
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].releaseYear").value("2000"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").value("Magic City"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].writer").value("Behzod Mamadiev"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].illustrator").value("Ethan Tauriainen"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").value("An interesting book written and illustrated by a group of nerds."))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].createdBy").value("Alice"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].releaseYear").value("2010"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").value("Ghost City"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].writer").value("Angel Prado"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].illustrator").value("Ethan Tauriainen"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].description").value("The best comic book of all times!"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].createdBy").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].releaseYear").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].title").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].writer").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].illustrator").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].description").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].createdBy").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].releaseYear").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].title").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].writer").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].illustrator").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].description").isString());
 
-        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", book1.getAsin(), book1.getCreatedBy()));
-        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", book2.getAsin(), book2.getCreatedBy()));
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", book1.getAsin(), book1.getCreatedBy()))
+                .andExpect(status().isNoContent());
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", book2.getAsin(), book2.getCreatedBy()))
+                .andExpect(status().isNoContent());
     }
 
     @Test
@@ -203,6 +207,38 @@ class ComicBookControllerTest {
     public void deleteComicBook_nonExistentAsin_badRequest() throws Exception {
         mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", UUID.randomUUID().toString(), "Bob"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void findBookByAsin_success() throws Exception {
+        ComicBookCreateRequest createRequest = new ComicBookCreateRequest();
+        createRequest.setCreatedBy("Behzod");
+        createRequest.setReleaseYear("1886");
+        createRequest.setTitle("Das Capital");
+        createRequest.setWriter("Karl Marx");
+        createRequest.setIllustrator("Lenin");
+        createRequest.setDescription("What a job! Serious book turned into a comic???");
+
+        mapper.registerModule(new JavaTimeModule());
+
+        String createResponse = mvc.perform(post("/books")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(createRequest)))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        ComicBookResponse createBookResponse = mapper.readValue(createResponse, new TypeReference<ComicBookResponse>() {} );
+        String asin = createBookResponse.getAsin();
+
+        mvc.perform(get("/books/{asin}", asin)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(createRequest)))
+                .andExpect(status().isOk());
+        //clean up
+        mvc.perform(delete("/books/delete/{asin}/createdBy/{name}", asin, createBookResponse.getCreatedBy()))
+                .andExpect(status().isNoContent());
     }
 
     @Test

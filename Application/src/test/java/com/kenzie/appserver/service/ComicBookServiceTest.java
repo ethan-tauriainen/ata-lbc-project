@@ -201,6 +201,52 @@ public class ComicBookServiceTest {
     }
 
     @Test
+    void findBookByAsin_null_throwsException() {
+        String asin = randomUUID().toString();
+
+        ComicBookRecord record = new ComicBookRecord();
+        record.setAsin(asin);
+        record.setReleaseYear("2000");
+        record.setTitle("Sample Book");
+        record.setWriter("Sample author");
+        record.setIllustrator("Sample illustrator");
+        record.setDescription("Sample description");
+
+        when(comicBookRepository.findById(asin)).thenReturn(Optional.of(record));
+
+        // WHEN
+        ComicBook comicBook = comicBookService.findBookByAsin(asin);
+
+        // THEN
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            comicBookService.findBookByAsin(null);
+        });
+    }
+
+    @Test
+    void findBookByAsin_empty_throwsException() {
+        String asin = randomUUID().toString();
+
+        ComicBookRecord record = new ComicBookRecord();
+        record.setAsin(asin);
+        record.setReleaseYear("2000");
+        record.setTitle("Sample Book");
+        record.setWriter("Sample author");
+        record.setIllustrator("Sample illustrator");
+        record.setDescription("Sample description");
+
+        when(comicBookRepository.findById(asin)).thenReturn(Optional.of(record));
+
+        // WHEN
+        ComicBook comicBook = comicBookService.findBookByAsin(asin);
+
+        // THEN
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            comicBookService.findBookByAsin("");
+        });
+    }
+
+    @Test
     void deleteComicBook_success() {
         String asin = UUID.randomUUID().toString();
         String createdBy = "Bob";
