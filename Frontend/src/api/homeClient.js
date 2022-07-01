@@ -44,6 +44,21 @@ export default class HomeClient extends BaseClass {
         }
     }
 
+    /**
+     * Gets a comic book based on its ASIN.
+     * @param asin the unique identifier of the comic book.
+     * @param errorCallback (Optional) A function to execute if the call fails.
+     * @returns a single comic book.
+     */
+    async findBookByAsin(asin, errorCallback) {
+        try {
+            const response = await this.client.get(`/books/${asin}`);
+            return response.data;
+        } catch (error) {
+            this.handleError("findBookByAsin", error, errorCallback)
+        }
+    }
+
     async createExample(name, errorCallback) {
         try {
             const response = await this.client.post(`example`, {
