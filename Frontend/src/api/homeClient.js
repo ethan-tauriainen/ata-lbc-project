@@ -13,7 +13,7 @@ export default class HomeClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['clientLoaded', 'getComicBooks', 'createExample'];
+        const methodsToBind = ['clientLoaded', 'getAllComicBooks', 'createExample'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -35,12 +35,12 @@ export default class HomeClient extends BaseClass {
      * @param errorCallback (Optional) A function to execute if the call fails.
      * @returns List of comic books.
      */
-    async getComicBooks(errorCallback) {
+    async getAllComicBooks(errorCallback) {
         try {
             const response = await this.client.get(`/books/all`);
             return response.data;
         } catch (error) {
-            this.handleError("getComicBooks", error, errorCallback)
+            this.handleError("getAllComicBooks", error, errorCallback)
         }
     }
 
