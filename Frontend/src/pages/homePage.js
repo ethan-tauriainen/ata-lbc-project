@@ -18,7 +18,7 @@
       */
      async mount() {
 //         document.getElementById('get-comic-books-form').addEventListener('submit', this.onGet);
-         document.getElementById('get-comic-books-form').addEventListener('submit', this.onCreate);
+         document.getElementById('get-all-comic-books-form').addEventListener('submit', this.onCreate);
          this.client = new HomeClient();
          await this.onGetComicBooks();
 
@@ -28,7 +28,7 @@
      // Render Methods --------------------------------------------------------------------------------------------------
 
      async renderComicBooks() {
-         let resultArea = document.getElementById("result-info");
+         let resultArea = document.getElementById("all-books-info");
 
          const comicBooks = this.dataStore.get("comicBooks");
 
@@ -56,7 +56,7 @@
 
      async onGetComicBooks() {
          // Prevent the page from refreshing on form submit
-         let result = await this.client.getComicBooks(this.errorHandler);
+         let result = await this.client.getAllComicBooks(this.errorHandler);
          this.dataStore.set("comicBooks", result);
      }
 
