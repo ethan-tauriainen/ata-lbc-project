@@ -11,7 +11,7 @@ public class ComicBookUpdateRequest {
     @JsonProperty("asin")
     private String asin;
 
-    @JsonProperty("createBy")
+    @JsonProperty("createdBy")
     private String createdBy;
 
     @NotEmpty

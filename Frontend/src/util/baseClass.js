@@ -20,6 +20,34 @@ export default class BaseClass {
         return formatter.format(amount);
     }
 
+    /**
+     * Creates a div containing all elements to display book details.
+     * @param book element from the datastore, which details are taken from.
+     */
+    createBookDiv(book) {
+        let result = document.getElementById("book-container");
+
+        while (result.firstChild) {
+            result.removeChild(result.firstChild);
+        }
+
+        const bookDiv = document.createElement('div');
+        const title = document.createElement('h3');
+        title.innerText = book.title;
+
+        bookDiv.appendChild(title);
+        bookDiv.appendChild(document.createTextNode(`Released: ${book.releaseYear}`));
+        bookDiv.appendChild(document.createElement('br'));
+        bookDiv.appendChild(document.createTextNode(`Written by: ${book.writer}`));
+        bookDiv.appendChild(document.createElement('br'));
+        bookDiv.appendChild(document.createTextNode(`Illustrated by: ${book.illustrator}`));
+        bookDiv.appendChild(document.createElement('br'));
+        bookDiv.appendChild(document.createElement('br'));
+        bookDiv.appendChild(document.createTextNode(book.description));
+
+        result.appendChild(bookDiv);
+    }
+
     showMessage(message) {
         Toastify({
             text: message,

@@ -20,30 +20,10 @@ class DetailsPage extends BaseClass {
     // Render Methods --------------------------------------------------------------------------------------------------
 
     async renderBookDetails() {
-        let result = document.getElementById("book-container");
-
-        while (result.firstChild) {
-            result.removeChild(result.firstChild);
-        }
-
         const book = this.dataStore.get("book");
 
         if (book) {
-            const bookDiv = document.createElement('div');
-            const title = document.createElement('h3');
-            title.innerText = book.title;
-
-            bookDiv.appendChild(title);
-            bookDiv.appendChild(document.createTextNode(`Released: ${book.releaseYear}`));
-            bookDiv.appendChild(document.createElement('br'));
-            bookDiv.appendChild(document.createTextNode(`Written by: ${book.writer}`));
-            bookDiv.appendChild(document.createElement('br'));
-            bookDiv.appendChild(document.createTextNode(`Illustrated by: ${book.illustrator}`));
-            bookDiv.appendChild(document.createElement('br'));
-            bookDiv.appendChild(document.createElement('br'));
-            bookDiv.appendChild(document.createTextNode(book.description));
-
-            result.appendChild(bookDiv);
+            this.createBookDiv(book);
         }
     }
 
