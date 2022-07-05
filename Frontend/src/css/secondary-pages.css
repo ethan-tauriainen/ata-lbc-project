@@ -18,7 +18,22 @@ body {
     padding-top: 40px;
 }
 
-button {
+.validated-field {
+    width: 37ch;
+}
+
+#submit {
+    background: #aed9ff;
+    padding: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    color: black;
+    border: 1px solid black;
+    cursor: pointer;
+    width: 20ch;
+}
+
+#close {
     background: #aed9ff;
     padding: 3px;
     border-radius: 3px;
