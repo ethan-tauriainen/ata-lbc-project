@@ -20,40 +20,28 @@ class DetailsPage extends BaseClass {
     // Render Methods --------------------------------------------------------------------------------------------------
 
     async renderBookDetails() {
-        let result = document.getElementById("container");
+        let result = document.getElementById("book-container");
+
+        while (result.firstChild) {
+            result.removeChild(result.firstChild);
+        }
 
         const book = this.dataStore.get("book");
 
         if (book) {
             const bookDiv = document.createElement('div');
-            const title = document.createElement('div');
-            const description = document.createElement('div')
-            const writer = document.createElement('div')
-            const illustrator = document.createElement('div')
-            const releaseYear = document.createElement('div')
+            const title = document.createElement('h3');
+            title.innerText = book.title;
 
-            bookDiv.classList.add('book')
-            bookDiv.setAttribute('id', book.title)
-
-            title.textContent = book.title;
-            title.classList.add('title');
             bookDiv.appendChild(title);
-
-            releaseYear.textContent = `Released: ${book.releaseYear}`;
-            releaseYear.classList.add('release-year');
-            bookDiv.appendChild(releaseYear);
-
-            writer.textContent = `Written by: ${book.writer}`;
-            writer.classList.add('writer');
-            bookDiv.appendChild(writer);
-
-            illustrator.textContent = `Illustrated by: ${book.illustrator}`;
-            illustrator.classList.add('illustrator');
-            bookDiv.appendChild(illustrator);
-
-            description.textContent = book.description;
-            description.classList.add('description');
-            bookDiv.appendChild(description);
+            bookDiv.appendChild(document.createTextNode(`Released: ${book.releaseYear}`));
+            bookDiv.appendChild(document.createElement('br'));
+            bookDiv.appendChild(document.createTextNode(`Written by: ${book.writer}`));
+            bookDiv.appendChild(document.createElement('br'));
+            bookDiv.appendChild(document.createTextNode(`Illustrated by: ${book.illustrator}`));
+            bookDiv.appendChild(document.createElement('br'));
+            bookDiv.appendChild(document.createElement('br'));
+            bookDiv.appendChild(document.createTextNode(book.description));
 
             result.appendChild(bookDiv);
         }
@@ -69,11 +57,17 @@ class DetailsPage extends BaseClass {
 
         let result = await this.client.findBookByAsin(asin, this.errorHandler);
         this.dataStore.set("book", result);
-        if (result) {
-            this.showMessage(`Got ${result.title}!`)
-        } else {
+
+        if (!result) {
             this.errorHandler("Error doing GET! Try again...");
+            document.getElementById('get-book-details-asin').value = "";
+            return;
         }
+
+        document.getElementById('get-book-details-asin').value = "";
+
+        const container = document.getElementById('container');
+        container.classList.add('show');
     }
 }
 
