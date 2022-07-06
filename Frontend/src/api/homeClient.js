@@ -58,13 +58,27 @@ export default class HomeClient extends BaseClass {
             this.handleError("findBookByAsin", error, errorCallback)
         }
     }
-
-    async deleteBook(asin, name, errorCallback) {
+    /**
+     * Updates a comic book based on its ASIN and createdBy parameters.
+     * @param request the request object containing values to update.
+     * @param errorCallback (Optional) A function to execute if the call fails.
+     * @returns the updated entity.
+     */
+    async updateComicBook(request, errorCallback) {
         try {
-            const response = await this.client.delete(`/books/delete/${asin}/createdBy/${name}`)
-            return response.date;
+            const response = await this.client.put(`/books`, {
+                asin: request.asin,
+                createdBy: request.createdBy,
+                releaseYear: request.releaseYear,
+                title: request.title,
+                writer: request.writer,
+                illustrator: request.illustrator,
+                description: request.description
+            });
+            return response.data;
         } catch (error) {
-            this.handleError("deleteBook", error, errorCallback);
+            this.handleError("updateComicBook", error, errorCallback);
+>>>>>>> main
         }
     }
 

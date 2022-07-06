@@ -1,21 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script type="text/javascript" src="detailsPage.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/secondary-pages.css">
     <meta charset="UTF-8">
-    <title id="site-title"></title>
+    <title id="site-title">Details</title>
 </head>
 <body>
     <header id="header">
-        <a href="index.html">Home Page</a>
+        <a href="index.html">Home</a>
     </header>
     <div class="card">
+        <h2 id="book-details-header">Get Book Details</h2>
         <form class="card-content" id="get-book-details-form">
-            <label for="get-book-details-asin">Enter ASIN</label><br>
-            <input type="text" required class="validated-field" id="get-book-details-asin">
-            <button type="submit">Submit</button>
+            <p>
+                <input type="text" required class="validated-field" id="get-book-details-asin" placeholder="Enter ASIN">
+            </p>
+            <button id="submit" type="submit">Submit</button>
         </form>
     </div>
-    <div id="container"></div>
+    <div class="container" id="container">
+        <div class="modal">
+<!--            <h1>Book Details</h1>-->
+            <div class="book-container" id="book-container"></div>
+            <button id="close">Close</button>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="detailsPage.js"></script>
+    <script>
+        const container = document.getElementById('container');
+        const close = document.getElementById('close');
+
+        close.addEventListener('click', () => {
+            container.classList.remove('show');
+        });
+    </script>
 </body>
 </html>
