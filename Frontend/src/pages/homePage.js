@@ -39,6 +39,7 @@
             html += `
                 <li>
                     <h3>${comicBook.title}</h3>
+                    <p>Asin: ${comicBook.asin}</p>
                  </li>
             `
          }
