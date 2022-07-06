@@ -17,6 +17,11 @@ class DeletePage extends BaseClass {
 //        this.dataStore.addChangeListener(this.renderDelete)
     }
 
+    async renderDelete() {
+        const book = this.dataStore.delete("book");
+
+    }
+
 
     async onSubmit(event) {
              // Prevent the page from refreshing on form submit

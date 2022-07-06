@@ -78,7 +78,6 @@ export default class HomeClient extends BaseClass {
             return response.data;
         } catch (error) {
             this.handleError("updateComicBook", error, errorCallback);
->>>>>>> main
         }
     }
 
@@ -92,6 +91,14 @@ export default class HomeClient extends BaseClass {
             this.handleError("createExample", error, errorCallback);
         }
     }
+
+    async deleteBook(asin, name, errorCallback) {
+        try {
+            const response = await this.client.delete(`/books/delete/${asin}/createdBy/${name}`)
+            return response.date;
+        } catch (error) {
+            this.handleError("deleteBook", error, errorCallback);
+            }
 
     /**
      * Helper method to log the error and run any error functions.
