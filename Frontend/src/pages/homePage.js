@@ -38,7 +38,8 @@
          for(let comicBook of comicBooks) {
             html += `
                 <li>
-                    <h3>${comicBook.title}</h3>
+                    <h2>${comicBook.title}</h2>
+                    <h4>ASIN: ${comicBook.asin}</h4>
                  </li>
             `
          }

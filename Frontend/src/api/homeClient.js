@@ -13,7 +13,7 @@ export default class HomeClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['clientLoaded', 'getAllComicBooks', 'createExample'];
+        const methodsToBind = ['clientLoaded', 'getAllComicBooks', 'createExample', 'deleteBook'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -56,6 +56,15 @@ export default class HomeClient extends BaseClass {
             return response.data;
         } catch (error) {
             this.handleError("findBookByAsin", error, errorCallback)
+        }
+    }
+
+    async deleteBook(asin, name, errorCallback) {
+        try {
+            const response = await this.client.delete(`/books/delete/${asin}/createdBy/${name}`)
+            return response.date;
+        } catch (error) {
+            this.handleError("deleteBook", error, errorCallback);
         }
     }
 

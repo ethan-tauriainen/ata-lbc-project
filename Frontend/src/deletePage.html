@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script type="text/javascript" src="homePage.js"></script>
+    <script type="text/javascript" src="deletePage.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <title>Bookworms</title>
@@ -20,19 +20,16 @@
     </div>
 </header>
 <div class="card">
-    <h1>Welcome to Comic Bookworms!</h1>
-    <h3>Retrieve all the books in our collection by hitting the button below.</h3>
-</div>
-<div class="card">
-    <form class="card-content" id="get-all-comic-books-form">
-        <p>
-            <button type="submit">Get All Comic Books</button>
+    <h3>To delete a ComicBook, enter your name and the ASIN of the comicbook you wish to delete.</h3>
+    <form class="card-content" id="delete-book-form">
+        <p class="form-field">
+            <label>Name</label>
+            <input type="text" required class="validated-field" id="name-field">
+            <label>ASIN</label>
+            <input type="text" required class="validated-field" id="asin-field">
         </p>
+        <button type="submit">Delete</button>
     </form>
-</div>
-<div class="card" id="all-books">
-    <h2>All Books:</h2>
-    <p id="all-books-info"></p>
 </div>
 </body>
 </html>
