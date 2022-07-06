@@ -38,10 +38,10 @@ class DeletePage extends BaseClass {
                 this.errorHandler("Error deleting! Try again...");
              }
          }
-
-const main = async () => {
-    const deletePage = new DeletePage();
-    await deletePage.mount();
-};
-window.addEventListener('DOMContentLoaded', main);
 }
+ const main = async () => {
+     const deletePage = new DeletePage();
+     await deletePage.mount();
+ };
+
+window.addEventListener('DOMContentLoaded', main);

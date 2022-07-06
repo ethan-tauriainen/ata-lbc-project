@@ -10,7 +10,8 @@ module.exports = {
   entry: {
     homePage: path.resolve(__dirname, 'src', 'pages', 'homePage.js'),
     detailsPage: path.resolve(__dirname, 'src', 'pages', 'detailsPage.js'),
-    updatePage: path.resolve(__dirname, 'src', 'pages', 'updatePage.js')
+    updatePage: path.resolve(__dirname, 'src', 'pages', 'updatePage.js'),
+    deletePage: path.resolve(__dirname, 'src', 'pages', 'deletePage.js')
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -50,6 +51,11 @@ module.exports = {
       template: './src/updatePage.html',
       filename: 'updatePage.html',
       inject: false
+    }),
+    new HtmlWebpackPlugin({
+          template: './src/deletePage.html',
+          filename: 'deletePage.html',
+          inject: false
     }),
     new CopyPlugin({
       patterns: [
