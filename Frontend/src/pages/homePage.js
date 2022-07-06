@@ -49,7 +49,7 @@
         if(comicBooks) {
            resultArea.innerHTML = html;
         } else {
-           resultArea.innerHTML = "No ComicBooks";
+           resultArea.innerHTML = "No Comic Books";
         }
      }
 

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="css/secondary-pages.css">
+    <meta charset="UTF-8">
+    <title id="site-title">Add</title>
+</head>
+<body>
+<header id="header">
+    <a href="index.html">Home</a>
+</header>
+<div class="card">
+    <h2 id="book-details-header">Add a New Book</h2>
+    <form class="card-content" id="add-new-book-form">
+        <p class="form-field">
+            <input type="text" required class="validated-field" id="add-book-details-createdBy" placeholder="Created by...">
+        </p>
+        <p class="form-field">
+            <input type="text" class="validated-field" id="add-book-details-releaseYear" placeholder="Year released...">
+        </p>
+        <p class="form-field">
+            <input type="text" class="validated-field" id="add-book-details-title" placeholder="Title...">
+        </p>
+        <p class="form-field">
+            <input type="text" class="validated-field" id="add-book-details-writer" placeholder="Written by...">
+        </p>
+        <p class="form-field">
+            <input type="text" class="validated-field" id="add-book-details-illustrator" placeholder="Illustrated by...">
+        </p>
+        <p class="form-field">
+            <textarea class="validated-field" id="add-book-details-description" placeholder="Description..." rows="6"></textarea>
+        </p>
+        <button id="submit" type="submit">Submit</button>
+    </form>
+</div>
+<div class="container" id="container">
+    <div class="modal">
+        <!--            <h1>Book Details</h1>-->
+        <div class="book-container" id="book-container"></div>
+        <button id="close">Close</button>
+    </div>
+</div>
+
+<script type="text/javascript" src="addPage.js"></script>
+<script>
+        const container = document.getElementById('container');
+        const close = document.getElementById('close');
+
+        close.addEventListener('click', () => {
+            container.classList.remove('show');
+        });
+    </script>
+</body>
+</html>
