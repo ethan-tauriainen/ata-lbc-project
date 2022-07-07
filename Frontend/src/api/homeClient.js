@@ -13,7 +13,7 @@ export default class HomeClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['clientLoaded', 'getAllComicBooks', 'addNewBook'];
+        const methodsToBind = ['clientLoaded', 'getAllComicBooks', 'addNewBook', 'deleteBook'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -58,7 +58,6 @@ export default class HomeClient extends BaseClass {
             this.handleError("findBookByAsin", error, errorCallback)
         }
     }
-
     /**
      * Updates a comic book based on its ASIN and createdBy parameters.
      * @param request the request object containing values to update.
@@ -102,7 +101,20 @@ export default class HomeClient extends BaseClass {
                 this.handleError("addNewBook", error, errorCallback);
             }
     }
-
+    /**
+     * Delete an existing comic book in the collection.
+     * @param asin the unique identifier of the comic book.
+     * @param name of the user who created comic book entry
+     * @param errorCallback (Optional) A function to execute if the call fails.
+     */
+    async deleteBook(asin, name, errorCallback) {
+        try {
+            const response = await this.client.delete(`/books/delete/${asin}/createdBy/${name}`)
+            return response.data;
+        } catch (error) {
+            this.handleError("deleteBook", error, errorCallback);
+            }
+    }
     /**
      * Helper method to log the error and run any error functions.
      * @param method The method being called.
