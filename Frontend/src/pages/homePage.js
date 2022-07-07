@@ -38,8 +38,8 @@
          for(let comicBook of comicBooks) {
             html += `
                 <li>
-                    <h2>${comicBook.title}</h2>
-                    <h4>ASIN: ${comicBook.asin}</h4>
+                    <h3>${comicBook.title}</h3>
+                    <p>Asin: ${comicBook.asin}</p>
                  </li>
             `
          }
@@ -49,7 +49,7 @@
         if(comicBooks) {
            resultArea.innerHTML = html;
         } else {
-           resultArea.innerHTML = "No ComicBooks";
+           resultArea.innerHTML = "No Comic Books";
         }
      }
 

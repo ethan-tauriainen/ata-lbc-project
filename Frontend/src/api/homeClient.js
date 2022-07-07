@@ -13,7 +13,7 @@ export default class HomeClient extends BaseClass {
 
     constructor(props = {}){
         super();
-        const methodsToBind = ['clientLoaded', 'getAllComicBooks', 'createExample', 'deleteBook'];
+        const methodsToBind = ['clientLoaded', 'getAllComicBooks', 'addNewBook'];
         this.bindClassMethods(methodsToBind, this);
         this.props = props;
         this.clientLoaded(axios);
@@ -80,16 +80,26 @@ export default class HomeClient extends BaseClass {
             this.handleError("updateComicBook", error, errorCallback);
         }
     }
-
-    async createExample(name, errorCallback) {
+    /**
+     * Adds a new comic book to the collection.
+     * @param request the request object containing values to add.
+     * @param errorCallback (Optional) A function to execute if the call fails.
+     * @returns the added entity.
+     */
+    async addNewBook(request, errorCallback) {
         try {
-            const response = await this.client.post(`example`, {
-                name: name
+            const response = await this.client.post(`/books`, {
+                createdBy: request.createdBy,
+                releaseYear: request.releaseYear,
+                title: request.title,
+                writer: request.writer,
+                illustrator: request.illustrator,
+                description: request.description
             });
-            return response.data;
-        } catch (error) {
-            this.handleError("createExample", error, errorCallback);
-        }
+                return response.data;
+            } catch (error) {
+                this.handleError("addNewBook", error, errorCallback);
+            }
     }
 
     async deleteBook(asin, name, errorCallback) {
