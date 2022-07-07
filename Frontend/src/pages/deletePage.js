@@ -6,42 +6,56 @@ class DeletePage extends BaseClass {
 
     constructor() {
         super();
-        this.bindClassMethods(['onSubmit'], this);
+        this.bindClassMethods(['onDelete', 'renderDelete'], this);
         this.dataStore = new DataStore();
     }
 
+    /**
+     * Once the page has loaded, set up the event handlers
+     */
     async mount() {
-        document.getElementById('delete-book-form').addEventListener('submit', this.onCreate);
-        this.client = new HomeClient;
+        document.getElementById('delete-book-form').addEventListener('submit', this.onDelete);
+        this.client = new HomeClient();
 
-//        this.dataStore.addChangeListener(this.renderDelete)
+        this.dataStore.addChangeListener(this.renderDelete)
     }
+
+    /** Render Methods -----------------------------------------------------------------------------------------------*/
 
     async renderDelete() {
-        const book = this.dataStore.delete("book");
+        const deletedBook = this.dataStore.get("deletedBook");
 
+        if (deletedBook) {
+            this.createBookDiv(deletedBook);
+        }
     }
 
+    /** Event Handlers -----------------------------------------------------------------------------------------------*/
 
-    async onSubmit(event) {
-             // Prevent the page from refreshing on form submit
-             event.preventDefault();
+    async onDelete(event) {
+        // Prevent the page from refreshing on form submit
+        event.preventDefault();
+        this.dataStore.set("deletedBook", null);
 
-             let asin = document.getElementById("asin-field").value;
-             let name = document.getElementById("name-field").value;
+        let name = document.getElementById("delete-book-name-field").value;
+        let asin = document.getElementById("delete-book-asin-field").value;
 
-             const deleteBook = await this.client.deleteBook(asin, name, this.errorHandler);
+        const deletedBook = await this.client.deleteBook(asin, name, this.errorHandler);
+        this.dataStore.set("deletedBook", deletedBook);
 
-             if(deleteBook) {
-                this.showMessage(`Deleted Comic Book!`)
-             } else {
-                this.errorHandler("Error deleting! Try again...");
-             }
-         }
+        if (!deletedBook) {
+            this.showMessage(`Deleted ${asin}!`);
+            document.getElementById('delete-book-name-field').value = "";
+            document.getElementById('delete-book-asin-field').value = "";
+        } else {
+            this.errorHandler("Error deleting!  Try again...");
+        }
+    }
 }
- const main = async () => {
-     const deletePage = new DeletePage();
-     await deletePage.mount();
- };
+
+const main = async () => {
+    const deletePage = new DeletePage();
+    deletePage.mount();
+};
 
 window.addEventListener('DOMContentLoaded', main);

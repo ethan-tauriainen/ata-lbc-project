@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <script type="text/javascript" src="deletePage.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/secondary-pages.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <title>Bookworms</title>
+    <title>Delete</title>
 </head>
 <body class="background">
 <header class="header" id="header">
@@ -12,24 +13,38 @@
         <a class="header_home" href="index.html">Comic Bookworms Club</a>
         <ul class="navigation">
             <li><a href="index.html">Home</a></li>
+            <li><a href="addPage.html">Add</a></li>
             <li><a href="detailsPage.html">Details</a></li>
             <li><a href="deletePage.html">Delete</a></li>
             <li><a href="updatePage.html">Update</a></li>
-            <li><a href="#">Add</a></li>
         </ul>
     </div>
 </header>
 <div class="card">
-    <h3>To delete a ComicBook, enter your name and the ASIN of the comicbook you wish to delete.</h3>
+    <h2>Delete Comic Book</h2>
     <form class="card-content" id="delete-book-form">
         <p class="form-field">
-            <label>Name</label>
-            <input type="text" required class="validated-field" id="name-field">
-            <label>ASIN</label>
-            <input type="text" required class="validated-field" id="asin-field">
+            <input type="text" required class="validated-field" id="delete-book-name-field" placeholder="Name...">
+        </p>
+        <p>
+            <input type="text" required class="validated-field" id="delete-book-asin-field" placeholder="ASIN...">
         </p>
         <button type="submit">Delete</button>
     </form>
 </div>
+<div class="container" id="container">
+    <div class="modal">
+        <div class="book-container" id="book-container"></div>
+        <button id="close">Close</button>
+    </div>
+</div>
+<script>
+        const container = document.getElementById('container');
+        const close = document.getElementById('close');
+
+        close.addEventListener('click', () => {
+            container.classList.remove('show');
+        });
+    </script>
 </body>
 </html>
