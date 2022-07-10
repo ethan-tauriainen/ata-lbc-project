@@ -110,10 +110,10 @@ export default class HomeClient extends BaseClass {
     async deleteBook(asin, name, errorCallback) {
         try {
             const response = await this.client.delete(`/books/delete/${asin}/createdBy/${name}`)
-            return response.data;
+            return true;
         } catch (error) {
             this.handleError("deleteBook", error, errorCallback);
-            }
+        }
     }
     /**
      * Helper method to log the error and run any error functions.
