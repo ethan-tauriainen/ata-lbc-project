@@ -35,6 +35,9 @@ class DeletePage extends BaseClass {
             this.showMessage(`Deleted ${asin}!`);
             document.getElementById('delete-book-name-field').value = "";
             document.getElementById('delete-book-asin-field').value = "";
+
+            const container = document.getElementById('container');
+            container.classList.add('show');
         } else {
             this.errorHandler("Error deleting! Try again...");
             document.getElementById('delete-book-name-field').value = "";
