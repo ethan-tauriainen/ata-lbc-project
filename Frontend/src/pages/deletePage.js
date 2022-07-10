@@ -6,7 +6,6 @@ class DeletePage extends BaseClass {
 
     constructor() {
         super();
-//        this.bindClassMethods(['onDelete', 'renderDelete'], this);
         this.bindClassMethods(['onDelete'], this);
 
         this.dataStore = new DataStore();
