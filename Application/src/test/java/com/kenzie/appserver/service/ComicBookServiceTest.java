@@ -17,8 +17,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
@@ -174,6 +172,10 @@ public class ComicBookServiceTest {
                 "The writer matches.");
     }
 
+    /** ------------------------------------------------------------------------
+     *  comicBookService.findBookByAsin
+     *  ------------------------------------------------------------------------ **/
+
     @Test
     void findBookByAsin() {
         String asin = randomUUID().toString();
@@ -200,6 +202,10 @@ public class ComicBookServiceTest {
         Assertions.assertEquals(record.getDescription(), comicBook.getDescription(), "The book description data matches");
     }
 
+    /** ------------------------------------------------------------------------
+     *  comicBookService.findBookByAsin_null_throwsException
+     *  ------------------------------------------------------------------------ **/
+
     @Test
     void findBookByAsin_null_throwsException() {
         String asin = randomUUID().toString();
@@ -223,6 +229,10 @@ public class ComicBookServiceTest {
         });
     }
 
+    /** ------------------------------------------------------------------------
+     *  comicBookService.findBookByAsin_empty_throwsException
+     *  ------------------------------------------------------------------------ **/
+
     @Test
     void findBookByAsin_empty_throwsException() {
         String asin = randomUUID().toString();
@@ -245,6 +255,10 @@ public class ComicBookServiceTest {
             comicBookService.findBookByAsin("");
         });
     }
+
+    /** ------------------------------------------------------------------------
+     *  comicBookService.deleteComicBook
+     *  ------------------------------------------------------------------------ **/
 
     @Test
     void deleteComicBook_success() {
@@ -271,6 +285,11 @@ public class ComicBookServiceTest {
         Assertions.assertEquals(asin, asinCapture.getValue());
     }
 
+    /** ------------------------------------------------------------------------
+     *  comicBookService.deleteComicBook_comicDoesNotExist_throwsException
+     *  ------------------------------------------------------------------------ **/
+
+
     @Test
     void deleteComicBook_comicDoesNotExist_throwsException() {
         String asin = UUID.randomUUID().toString();
@@ -288,6 +307,12 @@ public class ComicBookServiceTest {
 
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
+
+
+    /** ------------------------------------------------------------------------
+     *  comicBookService.deleteComicBook_wrongName_throwsException
+     *  ------------------------------------------------------------------------ **/
+
 
     @Test
     void deleteComicBook_wrongName_throwsException() {
@@ -358,6 +383,10 @@ public class ComicBookServiceTest {
         Assertions.assertTrue(storedComicBook.getDescription().contains(updatedComicBook.getDescription()), "Description should be updated.");
     }
 
+    /** ------------------------------------------------------------------------
+     *  comicBookService.updateComicBook_comicDoesNotExist_throwsException
+     *  ------------------------------------------------------------------------ **/
+
     @Test
     void updateComicBook_comicDoesNotExist_throwsException() {
         ComicBook fakeComicBook = new ComicBook(
@@ -381,6 +410,11 @@ public class ComicBookServiceTest {
 
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
+
+    /** ------------------------------------------------------------------------
+     *  comicBookService.updateComicBook_wrongName_throwsException
+     *  ------------------------------------------------------------------------ **/
+
     @Test
     void updateComicBook_wrongName_throwsException() {
         ComicBookRecord record = new ComicBookRecord();
@@ -415,5 +449,4 @@ public class ComicBookServiceTest {
 
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
-
 }
