@@ -1,13 +1,10 @@
 package com.kenzie.appserver.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.kenzie.appserver.IntegrationTest;
 import com.kenzie.appserver.controller.model.ComicBookCreateRequest;
 import com.kenzie.appserver.controller.model.ComicBookResponse;
 import com.kenzie.appserver.controller.model.ComicBookUpdateRequest;
-import com.kenzie.appserver.repositories.ComicBookRepository;
-import com.kenzie.appserver.repositories.model.ComicBookRecord;
 import com.kenzie.appserver.service.ComicBookService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,21 +15,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -43,7 +32,6 @@ class ComicBookControllerTest {
 
     @Autowired
     ComicBookService comicBookService;
-    ComicBookRepository comicBookRepository;
 
     private final MockNeat mockNeat = MockNeat.threadLocal();
 

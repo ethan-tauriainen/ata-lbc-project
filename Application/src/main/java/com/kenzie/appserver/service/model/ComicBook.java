@@ -1,7 +1,5 @@
 package com.kenzie.appserver.service.model;
 
-import java.util.List;
-
 public class ComicBook {
 
     private final String asin;
